@@ -14,7 +14,7 @@ on:
 
 env:
   JAVA_VERSION: '21'
-  NODE_VERSION: '22'
+  NODE_VERSION: '24'
   POSTGRES_DB: mes_test_ci
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: postgres

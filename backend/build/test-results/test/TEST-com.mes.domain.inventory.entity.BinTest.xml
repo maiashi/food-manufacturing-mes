@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.mes.domain.inventory.entity.BinTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-05-16T04:02:11" hostname="MaiashiM4Mac-mini.local" time="0.04">
+  <properties/>
+  <testcase name="copy_returnsNewWithDifferentId()" classname="com.mes.domain.inventory.entity.BinTest" time="0.038"/>
+  <testcase name="setters_updateFieldsCorrectly()" classname="com.mes.domain.inventory.entity.BinTest" time="0.0"/>
+  <testcase name="equals_inheritedFromBaseEntity_comparesById()" classname="com.mes.domain.inventory.entity.BinTest" time="0.001"/>
+  <testcase name="constructor_setsAllFields()" classname="com.mes.domain.inventory.entity.BinTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

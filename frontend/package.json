@@ -1,0 +1,50 @@
+{
+  "name": "mes-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:unit": "vitest run",
+    "test:e2e": "playwright test",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint . --fix",
+    "format": "prettier --write "src/**/*.{ts,vue,css,json}""
+  },
+  "dependencies": {
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.0",
+    "pinia": "^2.3.0",
+    "@pinia-plugin-persistedstate/nuxt": "^3.2.2",
+    "axios": "^1.7.9",
+    "element-plus": "^2.9.1",
+    "@element-plus/icons-vue": "^2.3.1",
+    "vue-echarts": "^7.0.4",
+    "echarts": "^5.5.1",
+    "mqtt": "^5.10.3",
+    "dayjs": "^1.11.13",
+    "zod": "^3.24.1",
+    "@vueuse/core": "^12.4.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.1",
+    "typescript": "~5.7.2",
+    "vite": "^6.0.5",
+    "vue-tsc": "^2.2.0",
+    "vitest": "^3.0.2",
+    "@vue/test-utils": "^2.4.6",
+    "@testing-library/vue": "^8.1.0",
+    "@playwright/test": "^1.49.1",
+    "happy-dom": "^16.8.2",
+    "eslint": "^9.17.0",
+    "eslint-plugin-vue": "^9.32.0",
+    "@typescript-eslint/eslint-plugin": "^8.18.1",
+    "@typescript-eslint/parser": "^8.18.1",
+    "prettier": "^3.4.2",
+    "unplugin-auto-import": "^0.19.0",
+    "unplugin-vue-components": "^0.27.5"
+  }
+}

@@ -1,0 +1,474 @@
+%% Food Manufacturing MES - ER Diagram (Mermaid)
+%% URL for mermaid.live: https://mermaid.live/edit#pako:eNq9WVtz2zgS_JVLfkkRxcXJzr7M3lWu7E6i7CR2V1dVIiQaIkQiIJISndj4398ugJJokpLt2Fm9ACgaAjiYmahH4O_5bDqdzv0BnU7nXoKJw8PZcDJu2yCtQx3WcTTkqMfR0LbhKNlCg12S5aGzob6LjkbhHnrYF2eB_4pO8D1bT0d7T85-9sVJNl0mU6XvQzI3tW2x1KvT3cOjY5e8Mw5y07ZiNqS3fLl5u3R2aHc4e1rPb3p3t3kE2iG_9q6V6U3o1d-5x3uHJsfz8sF3Y9rW6M57X0n3t7N3Lj2fD3v9y8_2c4S0O6tP1hLpBdRb8i7Qn4gPwJ-YPxG4zV2z6a6x8W5kY7Hx9uZ2mF7a2xT4v3l3p6yC3z6c3t7y5r1sX_7hB7N3b9nR5e7yC3f3p0d7qX3z7nB8yL2rB8bJdV6xK3z9H7u1l9iG2x4a8E8tP7bJ9y7D3x5c7s9q0xN8F9z2c4n8e9j4o8p9r0s2t6v7w3y0z4a7b9d1f3h5j7l9n0p2r4t6v8x0z
+
+erDiagram
+    USER {
+        uuid user_id PK "ユーザーID"
+        string login_id UK "ログインID"
+        string name "氏名"
+        string email "メールアドレス"
+        string password_hash "パスワードハッシュ"
+        date created_at "作成日"
+        date updated_at "更新日"
+        boolean is_active "アクティブ"
+    }
+
+    ROLE {
+        uuid role_id PK "ロールID"
+        string role_name UK "ロール名"
+        string description "説明"
+    }
+
+    USER_ROLE {
+        uuid user_role_id PK "ユーザー-ロール紐付けID"
+        uuid user_id FK "ユーザーID"
+        uuid role_id FK "ロールID"
+    }
+
+    SUPPLIER {
+        uuid supplier_id PK "サプライヤーID"
+        string supplier_code UK "サプライヤーコード"
+        string supplier_name "会社名"
+        string contact_person "担当者"
+        string phone "電話番号"
+        string address "住所"
+        date certification_expiry "認証有効期限"
+        boolean is_approved "承認状態"
+    }
+
+    MATERIAL_MASTER {
+        uuid material_id PK "原材料ID"
+        string sku_code UK "SKUコード"
+        string material_name "原材料名"
+        string category "区分"
+        boolean is_allergen "アレルゲン"
+        jsonb allergen_types "アレルゲン種類"
+        string storage_condition "保存条件"
+    }
+
+    PRODUCT_MASTER {
+        uuid product_id PK "製品ID"
+        string sku_code UK "SKUコード"
+        string product_name "製品名"
+        string category "カテゴリ"
+        string storage_condition "保存条件"
+    }
+
+    BOM {
+        uuid bom_id PK "BOM ID"
+        uuid product_id FK "製品ID"
+        decimal version "バージョン"
+        date effective_date "有効日"
+    }
+
+    BOM_ITEM {
+        uuid bom_item_id PK "BOM明細ID"
+        uuid bom_id FK "BOM ID"
+        uuid material_id FK "原材料ID"
+        decimal required_qty "必要数量"
+        string unit "単位"
+        boolean is_substitute_allowed "代替許可"
+    }
+
+    WAREHOUSE {
+        uuid warehouse_id PK "倉庫ID"
+        string wh_code UK "倉庫コード"
+        string wh_name "倉庫名"
+        string temperature_zone "温度帯"
+        decimal total_volume "総容積(L)"
+        decimal total_weight_capacity "総重量(kg)"
+    }
+
+    ZONE {
+        uuid zone_id PK "ゾーンID"
+        uuid warehouse_id FK "倉庫ID"
+        string zone_code "ゾーンコード"
+        string zone_name "ゾーン名"
+        string temperature_override "温度帯上書き"
+    }
+
+    SHELF {
+        uuid shelf_id PK "棚ID"
+        uuid zone_id FK "ゾーンID"
+        string shelf_code "棚コード"
+        decimal weight_limit_kg "重量上限(kg)"
+        decimal volume_limit_l "容積上限(L)"
+        boolean is_active "有効"
+    }
+
+    BIN {
+        uuid bin_id PK "バインID"
+        uuid shelf_id FK "棚ID"
+        string bin_code "位置コード"
+        decimal weight_capacity_kg "重量容量(kg)"
+        boolean is_occupied "使用中"
+    }
+
+    LOT {
+        uuid lot_id PK "ロットID"
+        string lot_number UK "ロット番号"
+        uuid material_id FK "原材料ID"
+        uuid parent_lot_id FK "親ロットID(自己参照)"
+        date manufacturing_date "製造日"
+        date expiry_date "有効期限"
+        decimal quantity "数量"
+        string unit "単位"
+        string status "ステータス"
+        uuid supplier_id FK "サプライヤー"
+        date received_date "受入日"
+    }
+
+    LOT_LOCATION {
+        uuid lot_location_id PK "保管位置ID"
+        uuid lot_id FK "ロットID"
+        uuid bin_id FK "バインID"
+        decimal current_qty "現在数量"
+        date moved_in_date "移動日"
+        date moved_out_date "移出日"
+    }
+
+    STOCK_TRANSACTION {
+        uuid transaction_id PK "取引ID"
+        uuid lot_id FK "ロットID"
+        string transaction_type "取引タイプ"
+        decimal quantity_delta "数量増減"
+        timestamp created_at "作成日時"
+        uuid created_by_user_id FK "操作者"
+        string reference_doc_no "参照文書番号"
+    }
+
+    PURCHASE_ORDER {
+        uuid po_id PK "PO ID"
+        string po_number UK "PO番号"
+        uuid supplier_id FK "サプライヤーID"
+        date order_date "発注日"
+        date expected_delivery_date "納期予定日"
+        string status "状態"
+    }
+
+    PO_ITEM {
+        uuid po_item_id PK "PO明細ID"
+        uuid po_id FK "PO ID"
+        uuid material_id FK "原材料ID"
+        decimal ordered_qty "発注数量"
+        string unit "単位"
+    }
+
+    RECEIPT {
+        uuid receipt_id PK "受入ID"
+        string receipt_number UK "受入番号"
+        uuid po_id FK "PO ID"
+        date receipt_date "受入日"
+        string inspection_result "検収結果"
+        uuid received_by_user_id FK "担当者"
+    }
+
+    RECEIPT_ITEM {
+        uuid receipt_item_id PK "受入明細ID"
+        uuid receipt_id FK "受入ID"
+        uuid material_id FK "原材料ID"
+        decimal received_qty "受入数量"
+        uuid lot_id FK "Lot ID"
+        boolean inspection_passed "検収パス"
+        string coa_file_url "COAファイルURL"
+    }
+
+    PRODUCTION_ORDER {
+        uuid production_order_id PK "生産指示ID"
+        string order_number UK "指示番号"
+        uuid product_id FK "製品ID"
+        uuid warehouse_id FK "倉庫ID"
+        date planned_start_date "計画開始日"
+        timestamp actual_start_date "実際開始"
+        date planned_end_date "計画終了日"
+        timestamp actual_end_date "実際終了"
+        decimal planned_qty "計画数量"
+        decimal actual_qty "実際数量"
+        string status "状態"
+    }
+
+    PRODUCTION_ORDER_ITEM {
+        uuid po_item_id PK "指示明細ID"
+        uuid production_order_id FK "生産指示ID"
+        uuid material_id FK "原材料ID"
+        uuid lot_id FK "元Lot ID"
+        decimal allocated_qty "割り当て数量"
+        decimal used_qty "使用数量"
+    }
+
+    PRODUCTION_BATCH {
+        uuid batch_id PK "バッチID"
+        string batch_number UK "バッチ番号"
+        uuid production_order_id FK "生産指示ID"
+        timestamp start_date "開始日時"
+        timestamp end_date "終了日時"
+        decimal input_qty "投入数量"
+        decimal output_qty "完成数量"
+        decimal yield_rate "歩留まり率(%)"
+    }
+
+    BATCH_LOT {
+        uuid batch_lot_id PK "完成品Lot ID"
+        string lot_number UK "Lot番号"
+        uuid batch_id FK "バッチID"
+        uuid product_id FK "製品ID"
+        date manufacturing_date "製造日"
+        date expiry_date "有効期限"
+        decimal quantity "数量"
+        string status "状態"
+    }
+
+    PROCESS_FLOW {
+        uuid process_flow_id PK "工程フローID"
+        uuid product_id FK "製品ID"
+        string flow_name "フロー名"
+        integer version "バージョン"
+        date effective_date "有効日"
+    }
+
+    PROCESS_STEP {
+        uuid step_id PK "工程ID"
+        uuid process_flow_id FK "工程フローID"
+        integer step_order "ステップ順序"
+        string step_name "工程名"
+        string step_type "工程タイプ"
+        boolean is_ccp "CCPフラグ"
+        boolean is_oprp "OPRPフラグ"
+        jsonb ccp_parameters "CCPパラメータ"
+    }
+
+    HACCP_PLAN {
+        uuid haccp_plan_id PK "HACCP計画ID"
+        uuid warehouse_id FK "倉庫ID"
+        string plan_version "バージョン"
+        date effective_date "有効日"
+        date expiry_date "有効期限"
+        string haccp_type "HACCPタイプ(1/2/3)"
+        boolean is_active "アクティブ"
+    }
+
+    HAZARD_ANALYSIS {
+        uuid hazard_id PK "分析ID"
+        uuid haccp_plan_id FK "HACCP計画ID"
+        uuid step_id FK "工程ID"
+        string hazard_type "危害種別(B/C/P)"
+        string hazard_description "説明"
+        integer severity_score "重大性(1-5)"
+        integer probability_score "確率(1-5)"
+        boolean is_acceptable "許容可否"
+    }
+
+    CCP_MONITORING_RECORD {
+        uuid record_id PK "記録ID"
+        uuid step_id FK "CCP工程ID"
+        uuid batch_id FK "バッチID"
+        timestamp monitoring_date "監視日時"
+        jsonb measured_values "実測値(温度/時間/pH等)"
+        string result "判定(OK/NG)"
+        uuid monitored_by_user_id FK "担当者"
+    }
+
+    CCP_DEVIATION {
+        uuid deviation_id PK "逸脱ID"
+        uuid record_id FK "監視記録ID"
+        timestamp detected_at "検知日時"
+        text deviation_description "逸脱内容"
+        text corrective_action_taken "是正措置"
+        decimal affected_quantity "影響数量"
+    }
+
+    PRE_REQUISITE_PROGRAM {
+        uuid prp_id PK "プログラムID"
+        string program_type "プログラム種別"
+        text description "説明"
+        integer frequency_days "実施頻度(日)"
+        boolean is_active "アクティブ"
+    }
+
+    PRP_EXECUTION_RECORD {
+        uuid record_id PK "記録ID"
+        uuid prp_id FK "プログラムID"
+        date execution_date "実施日"
+        string result "結果"
+        jsonb details "詳細"
+        uuid executed_by_user_id FK "担当者"
+    }
+
+    INSPECTION_SPEC {
+        uuid spec_id PK "規格ID"
+        uuid material_id FK "原材料ID(オプション)"
+        uuid product_id FK "製品ID(オプション)"
+        string spec_type "区分(incoming/in_process/final)"
+    }
+
+    SPEC_ITEM {
+        uuid spec_item_id PK "項目ID"
+        uuid spec_id FK "規格ID"
+        string item_name "項目名"
+        string measurement_unit "単位"
+        decimal min_limit "下限値"
+        decimal max_limit "上限値"
+    }
+
+    INSPECTION_RESULT {
+        uuid result_id PK "結果ID"
+        uuid lot_id FK "Lot ID"
+        uuid spec_id FK "規格ID"
+        timestamp inspection_date "検査日"
+        uuid inspector_user_id FK "検査員"
+    }
+
+    RESULT_ITEM {
+        uuid item_result_id PK "項目結果ID"
+        uuid result_id FK "結果ID"
+        uuid spec_item_id FK "規格項目ID"
+        decimal measured_value "実測値"
+        string judgment "判定(OK/NG)"
+        text note "備考"
+    }
+
+    NCR {
+        uuid ncr_id PK "NCR ID"
+        string ncr_number UK "NCR番号"
+        uuid lot_id FK "Lot ID"
+        string cause_category "原因分類"
+        text description "内容"
+        string disposition "処分(scrap/rework/return)"
+    }
+
+    PRODUCT_RECALL {
+        uuid recall_id PK "リコールID"
+        string recall_number UK "リコール番号"
+        text recall_reason "理由"
+        uuid affected_product_id FK "影響製品"
+        date announcement_date "発表日"
+        decimal total_units_affected "影響総数"
+        decimal total_units_recalled "回収済み数"
+        string status "状態(active/closed)"
+    }
+
+    CAPA {
+        uuid capa_id PK "CAPA ID"
+        string reference_type "参照種別(audit/deviation/ncr)"
+        string reference_id "参照ID"
+        text description "説明"
+        text root_cause_analysis "原因分析"
+        text corrective_action_plan "是正計画"
+        date due_date "期限日"
+        date completed_date "完了日"
+        string status "状態"
+    }
+
+    INTERNAL_AUDIT {
+        uuid audit_id PK "監査ID"
+        uuid haccp_plan_id FK "HACCP計画ID"
+        string audit_type "監査種別"
+        date scheduled_date "予定日"
+        date actual_date "実際日"
+        text finding "所見"
+        text nonconformity_description "不適合内容"
+        text corrective_action "是正措置"
+        string status "状態"
+    }
+
+    EQUIPMENT_CALIBRATION {
+        uuid cal_id PK "校正ID"
+        uuid step_id FK "工程(機器)ID"
+        date calibration_due_date "校正期日"
+        date last_calibrated_date "最終校正日"
+        date next_calibration_date "次回校正日"
+        string calibration_result "結果"
+    }
+
+    SHIPMENT_ORDER {
+        uuid shipment_id PK "出荷ID"
+        string shipment_number UK "出荷番号"
+        string customer_name "顧客名"
+        timestamp shipment_date "出荷日"
+        text delivery_address "配送先住所"
+        string status "状態"
+    }
+
+    SHIPMENT_ITEM {
+        uuid item_id PK "明細ID"
+        uuid shipment_id FK "出荷ID"
+        uuid product_id FK "製品ID"
+        uuid lot_id FK "Lot ID"
+        decimal shipped_qty "出荷数量"
+        timestamp actual_shipped_date "実際出荷日"
+    }
+
+    AUDIT_LOG {
+        uuid audit_log_id PK "ログID"
+        string entity_type "エンティティ種別"
+        uuid entity_id "エンティティID"
+        string action "操作(CREATE/UPDATE/DELETE)"
+        jsonb previous_values "変更前値"
+        jsonb new_values "変更後値"
+        timestamp timestamp "タイムスタンプ"
+        uuid user_id FK "ユーザーID"
+        string ip_address "IPアドレス"
+        string hash_chain "ハッシュチェーン"
+    }
+
+    %% リレーションシップ
+    USER ||--o{ USER_ROLE : has
+    ROLE ||--o{ USER_ROLE : assigned_to
+    SUPPLIER ||--o{ PURCHASE_ORDER : issues
+    PURCHASE_ORDER ||--o{ PO_ITEM : includes
+    MATERIAL_MASTER ||--o{ LOT : generates_lots
+    LOT }o--|| LOT : splits_from_parent
+    LOT_LOCATION }o--|| LOT : tracks_location
+    LOT_LOCATION }o--|| BIN : stored_at_bin
+    STOCK_TRANSACTION }o--|| LOT : affects_lot
+
+    WAREHOUSE ||--o{ ZONE : contains_zones
+    ZONE ||--o{ SHELF : has_shelves
+    SHELF ||--o{ BIN : has_bins
+
+    PRODUCT_MASTER ||--o{ BOM : has_bom
+    BOM ||--o{ BOM_ITEM : consists_of
+    BOM_ITEM }o--|| MATERIAL_MASTER : uses_material
+
+    RECEIPT ||--o{ RECEIPT_ITEM : contains
+    RECEIPT_ITEM }o--|| PURCHASE_ORDER : references_po
+    RECEIPT_ITEM }o--|| LOT : generates_lot_id
+
+    PRODUCTION_ORDER ||--o{ PRODUCTION_ORDER_ITEM : requires
+    PRODUCTION_ORDER ||--o{ PRODUCTION_BATCH : produces_batches
+    BATCH_LOT }o--|| PRODUCTION_BATCH : produced_from_batch
+
+    PROCESS_FLOW ||--o{ PROCESS_STEP : contains_steps
+    PROCESS_STEP ||--o{ HAZARD_ANALYSIS : analyzed
+    PROCESS_STEP ||--o{ CCP_MONITORING_RECORD : monitored
+    PROCESS_STEP ||--o{ EQUIPMENT_CALIBRATION : needs_calibration
+
+    HACCP_PLAN }o--|| WAREHOUSE : belongs_to_warehouse
+    HACCP_PLAN ||--o{ HAZARD_ANALYSIS : contains_analysis
+    HACCP_PLAN ||--o{ PRE_REQUISITE_PROGRAM : includes_prp
+    PRE_REQUISITE_PROGRAM ||--o{ PRP_EXECUTION_RECORD : executed
+
+    CCP_MONITORING_RECORD ||--o| CCP_DEVIATION : may_trigger
+    INTERNAL_AUDIT }o--|| HACCP_PLAN : audits_plan
+    CCP_DEVIATION ||--o| CAPA : generates_capa
+    INTERNAL_AUDIT ||--o| CAPA : generates_capa
+    NCR ||--o| CAPA : generates_capa
+
+    INSPECTION_SPEC ||--o{ SPEC_ITEM : defines_items
+    INSPECTION_RESULT }o--|| INSPECTION_SPEC : follows_spec
+    INSPECTION_RESULT }o--|| LOT : inspects_lot
+    RESULT_ITEM }o--|| INSPECTION_RESULT : part_of_result
+    RESULT_ITEM }o--|| SPEC_ITEM : measures_item
+
+    SHIPMENT_ORDER ||--o{ SHIPMENT_ITEM : contains
+    BATCH_LOT ||--o{ SHIPMENT_ITEM : shipped_to_customer
+
+    NCR }o--|| LOT : reports_on_lot
+    PRODUCT_RECALL }o--|| BATCH_LOT : affects_products
+
+    USER ||--o{ STOCK_TRANSACTION : creates
+    USER ||--o{ CCP_MONITORING_RECORD : monitors
+    USER ||--o{ PRP_EXECUTION_RECORD : executes
+    USER ||--o{ INSPECTION_RESULT : inspects
+    USER ||--o{ NCR : reports
+    USER ||--o{ AUDIT_LOG : generates

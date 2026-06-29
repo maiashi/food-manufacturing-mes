@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.mes.domain.common.BaseEntityTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-05-16T04:02:11" hostname="MaiashiM4Mac-mini.local" time="0.059">
+  <properties/>
+  <testcase name="constructor_allowsNullIdForAutoIncrement()" classname="com.mes.domain.common.BaseEntityTest" time="0.035"/>
+  <testcase name="deleteSetsDeletedAt()" classname="com.mes.domain.common.BaseEntityTest" time="0.001"/>
+  <testcase name="touchUpdatesUpdatedAt()" classname="com.mes.domain.common.BaseEntityTest" time="0.016"/>
+  <testcase name="equalsAndHashCode()" classname="com.mes.domain.common.BaseEntityTest" time="0.001"/>
+  <testcase name="constructor_throwsOnNullCreatedAt()" classname="com.mes.domain.common.BaseEntityTest" time="0.0"/>
+  <testcase name="constructor_setsIdAndCreatedAt()" classname="com.mes.domain.common.BaseEntityTest" time="0.0"/>
+  <testcase name="copyReturnsNewEntityWithGivenId()" classname="com.mes.domain.common.BaseEntityTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

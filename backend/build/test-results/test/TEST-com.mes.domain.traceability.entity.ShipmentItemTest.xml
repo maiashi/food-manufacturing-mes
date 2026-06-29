@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.mes.domain.traceability.entity.ShipmentItemTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-05-16T04:02:11" hostname="MaiashiM4Mac-mini.local" time="0.002">
+  <properties/>
+  <testcase name="constructor_allFields()" classname="com.mes.domain.traceability.entity.ShipmentItemTest" time="0.001"/>
+  <testcase name="copy_returnsNewWithDifferentId()" classname="com.mes.domain.traceability.entity.ShipmentItemTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

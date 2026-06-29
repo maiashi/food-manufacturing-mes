@@ -116,13 +116,9 @@ jobs:
 
       - name: Build Shadow JAR
         working-directory: ./backend
-        env:
-          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:${{ job.services.postgres.ports[5432] }}/${{ env.POSTGRES_DB }}
-          SPRING_DATASOURCE_USERNAME: ${{ env.POSTGRES_USER }}
-          SPRING_DATASOURCE_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
-        run: ./gradlew shadowJar -x test --no-daemon
+        run: ./gradlew shadowJar --no-daemon
 
-      - name: Upload JAR artifact
+      - name: Upload JAR
         uses: actions/upload-artifact@v4
         with:
           name: backend-jar

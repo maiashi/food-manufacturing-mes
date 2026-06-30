@@ -1,7 +1,6 @@
 package com.mes.domain.production.entity;
 
 import com.mes.domain.common.BaseEntity;
-import com.mes.domain.production.enums.BatchStatus;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -25,7 +24,7 @@ class ProductionBatchTest {
                 id, TEST_FACTORY, TEST_LINE, "BATCH-2025-001",
                 UUID.randomUUID(), startDate, endDate,
                 new BigDecimal("100.5"), new BigDecimal("98.2"),
-                new BigDecimal("0.977"), BatchStatus.COMPLETED);
+                new BigDecimal("0.977"), new BigDecimal("1.0"), new BigDecimal("0.3"));
 
         assertEquals(id, batch.getId());
         assertEquals(id, batch.getBatchId());
@@ -38,7 +37,8 @@ class ProductionBatchTest {
         assertEquals(new BigDecimal("100.5"), batch.getInputQty());
         assertEquals(new BigDecimal("98.2"), batch.getOutputQty());
         assertEquals(new BigDecimal("0.977"), batch.getYieldRate());
-        assertEquals(BatchStatus.COMPLETED, batch.getStatus());
+        assertEquals(new BigDecimal("1.0"), batch.getScrapQty());
+        assertEquals(new BigDecimal("0.3"), batch.getWasteQty());
     }
 
     @Test
@@ -46,7 +46,7 @@ class ProductionBatchTest {
         ProductionBatch original = new ProductionBatch(
                 UUID.randomUUID(), TEST_FACTORY, TEST_LINE, "BATCH-COPY-01",
                 UUID.randomUUID(), LocalDateTime.now(), null,
-                BigDecimal.TEN, new BigDecimal("9"), new BigDecimal("0.9"), BatchStatus.ACTIVE);
+                BigDecimal.TEN, new BigDecimal("9"), new BigDecimal("0.9"), BigDecimal.ONE, BigDecimal.ZERO);
         UUID newId = UUID.randomUUID();
 
         ProductionBatch copied = original.copy(newId);
@@ -54,7 +54,6 @@ class ProductionBatchTest {
         assertNotSame(original, copied);
         assertEquals(newId, copied.getId());
         assertEquals("BATCH-COPY-01", copied.getBatchNumber());
-        assertEquals(BatchStatus.ACTIVE, copied.getStatus());
     }
 
     @Test
@@ -62,7 +61,7 @@ class ProductionBatchTest {
         ProductionBatch original = new ProductionBatch(
                 UUID.randomUUID(), TEST_FACTORY, TEST_LINE, "BATCH-RUNNING",
                 UUID.randomUUID(), LocalDateTime.now(), null,
-                BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE, BatchStatus.ACTIVE);
+                BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ZERO);
 
         ProductionBatch copied = original.copy(UUID.randomUUID());
 
@@ -74,7 +73,7 @@ class ProductionBatchTest {
         ProductionBatch batch = new ProductionBatch(
                 UUID.randomUUID(), TEST_FACTORY, TEST_LINE, "BATCH-UPDATE",
                 UUID.randomUUID(), LocalDateTime.now(), null,
-                BigDecimal.TEN, BigDecimal.ZERO, null, BatchStatus.ACTIVE);
+                BigDecimal.TEN, BigDecimal.ZERO, null, BigDecimal.ONE, BigDecimal.ZERO);
 
         // Update output quantity and yield rate
         batch.setOutputQty(new BigDecimal("9.5"));
@@ -82,10 +81,13 @@ class ProductionBatchTest {
 
         batch.setYieldRate(new BigDecimal("0.95"));
         assertEquals(new BigDecimal("0.95"), batch.getYieldRate());
-
-        // Update status through lifecycle
-        batch.setStatus(BatchStatus.PAUSED);
-        assertEquals(BatchStatus.PAUSED, batch.getStatus());
+        
+        // Update scrap and waste quantities
+        batch.setScrapQty(new BigDecimal("0.5"));
+        assertEquals(new BigDecimal("0.5"), batch.getScrapQty());
+        
+        batch.setWasteQty(new BigDecimal("0.2"));
+        assertEquals(new BigDecimal("0.2"), batch.getWasteQty());
     }
 
     @Test
@@ -93,11 +95,11 @@ class ProductionBatchTest {
         UUID sameId = UUID.randomUUID();
         ProductionBatch a = new ProductionBatch(
                 sameId, TEST_FACTORY, TEST_LINE, "BATCH-A", UUID.randomUUID(),
-                LocalDateTime.now(), null, BigDecimal.TEN, BigDecimal.ONE, null, BatchStatus.SCHEDULED);
+                LocalDateTime.now(), null, BigDecimal.TEN, BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ZERO);
         ProductionBatch b = new ProductionBatch(
                 sameId, UUID.randomUUID(), UUID.randomUUID(), "BATCH-B", UUID.randomUUID(),
                 LocalDateTime.of(2026, 1, 1, 0, 0), LocalDateTime.of(2026, 1, 2, 0, 0),
-                BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE, BatchStatus.COMPLETED);
+                BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ZERO);
 
         assertEquals(a, b);
         assertEquals(a.hashCode(), b.hashCode());
@@ -107,20 +109,19 @@ class ProductionBatchTest {
     void allBatchStatuses_valid() {
         ProductionBatch[] batches = new ProductionBatch[] {
             new ProductionBatch(UUID.randomUUID(), TEST_FACTORY, TEST_LINE, "B1", UUID.randomUUID(),
-                LocalDateTime.now(), null, BigDecimal.ONE, BigDecimal.ONE, null, BatchStatus.SCHEDULED),
+                LocalDateTime.now(), null, BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ZERO),
             new ProductionBatch(UUID.randomUUID(), TEST_FACTORY, TEST_LINE, "B2", UUID.randomUUID(),
-                LocalDateTime.now(), null, BigDecimal.ONE, BigDecimal.ONE, null, BatchStatus.ACTIVE),
+                LocalDateTime.now(), null, BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ZERO),
             new ProductionBatch(UUID.randomUUID(), TEST_FACTORY, TEST_LINE, "B3", UUID.randomUUID(),
-                LocalDateTime.now(), null, BigDecimal.ONE, BigDecimal.ONE, null, BatchStatus.PAUSED),
+                LocalDateTime.now(), null, BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ZERO),
             new ProductionBatch(UUID.randomUUID(), TEST_FACTORY, TEST_LINE, "B4", UUID.randomUUID(),
-                LocalDateTime.now(), LocalDateTime.now(), BigDecimal.ONE, BigDecimal.ONE, null, BatchStatus.COMPLETED),
+                LocalDateTime.now(), LocalDateTime.now(), BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ZERO),
             new ProductionBatch(UUID.randomUUID(), TEST_FACTORY, TEST_LINE, "B5", UUID.randomUUID(),
-                LocalDateTime.now(), null, BigDecimal.ONE, BigDecimal.ZERO, null, BatchStatus.ABORTED)
+                LocalDateTime.now(), null, BigDecimal.ONE, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ONE, BigDecimal.ZERO)
         };
 
         for (int i = 0; i < batches.length; i++) {
             assertNotNull(batches[i]);
-            assertNotNull(batches[i].getStatus());
         }
     }
 
@@ -137,6 +138,6 @@ class ProductionBatchTest {
         return new ProductionBatch(
                 UUID.randomUUID(), TEST_FACTORY, TEST_LINE, "BATCH-VALID",
                 UUID.randomUUID(), LocalDateTime.now(), null,
-                BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE, BatchStatus.SCHEDULED);
+                BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ZERO);
     }
 }

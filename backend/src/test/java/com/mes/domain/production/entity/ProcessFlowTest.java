@@ -16,7 +16,7 @@ public class ProcessFlowTest {
     private ProcessFlow createSample() {
         return new ProcessFlow(
                 testId, factoryId, productId, "Cooking Flow",
-                new BigDecimal("2.0"), LocalDate.of(2025, 6, 1)
+                new BigDecimal("2.0"), LocalDate.of(2025, 6, 1), new BigDecimal("30.0")
         );
     }
 
@@ -30,6 +30,7 @@ public class ProcessFlowTest {
         assertEquals("Cooking Flow", flow.getFlowName());
         assertEquals(new BigDecimal("2.0"), flow.getVersion());
         assertEquals(LocalDate.of(2025, 6, 1), flow.getEffectiveDate());
+        assertEquals(new BigDecimal("30.0"), flow.getStandardProcessingTimeMinutes());
     }
 
     @Test
@@ -45,6 +46,7 @@ public class ProcessFlowTest {
         assertEquals("Cooking Flow", ((ProcessFlow) copied).getFlowName());
         assertEquals(new BigDecimal("2.0"), ((ProcessFlow) copied).getVersion());
         assertEquals(LocalDate.of(2025, 6, 1), ((ProcessFlow) copied).getEffectiveDate());
+        assertEquals(new BigDecimal("30.0"), ((ProcessFlow) copied).getStandardProcessingTimeMinutes());
     }
 
     @Test
@@ -56,6 +58,9 @@ public class ProcessFlowTest {
 
         flow.setVersion(new BigDecimal("3.1"));
         assertEquals(new BigDecimal("3.1"), flow.getVersion());
+        
+        flow.setStandardProcessingTimeMinutes(new BigDecimal("45.0"));
+        assertEquals(new BigDecimal("45.0"), flow.getStandardProcessingTimeMinutes());
     }
 
     @Test
@@ -67,7 +72,8 @@ public class ProcessFlowTest {
                 UUID.randomUUID(),
                 "Completely Different Flow",
                 BigDecimal.ONE,
-                LocalDate.of(2099, 12, 31)
+                LocalDate.of(2099, 12, 31),
+                BigDecimal.ONE
         );
 
         assertEquals(flow1, flow2);

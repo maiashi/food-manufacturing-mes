@@ -12,8 +12,9 @@ class PreRequisiteProgramTest {
 
     @Test
     void constructor_setsAllFields() {
+        UUID assignedToUserId = UUID.randomUUID();
         PreRequisiteProgram prp = new PreRequisiteProgram(ID, "Sanitation",
-                "Daily floor cleaning and sanitization protocol", 1, true);
+                "Daily floor cleaning and sanitization protocol", 1, true, assignedToUserId);
 
         assertEquals(ID, prp.getId());
         assertEquals(ID, prp.getPrpId());
@@ -21,12 +22,14 @@ class PreRequisiteProgramTest {
         assertEquals("Daily floor cleaning and sanitization protocol", prp.getDescription());
         assertEquals(Integer.valueOf(1), prp.getFrequencyDays());
         assertTrue(prp.getIsActive());
+        assertEquals(assignedToUserId, prp.getAssignedToUserId());
     }
 
     @Test
     void copy_returnsNewWithDifferentId() {
+        UUID assignedToUserId = UUID.randomUUID();
         PreRequisiteProgram original = new PreRequisiteProgram(ID, "Pest Control",
-                "Weekly pest inspection and treatment", 7, true);
+                "Weekly pest inspection and treatment", 7, true, assignedToUserId);
 
         UUID newId = UUID.randomUUID();
         PreRequisiteProgram copy = original.copy(newId);
@@ -36,12 +39,14 @@ class PreRequisiteProgramTest {
         assertEquals("Pest Control", copy.getProgramType());
         assertEquals("Weekly pest inspection and treatment", copy.getDescription());
         assertEquals(Integer.valueOf(7), copy.getFrequencyDays());
+        assertEquals(assignedToUserId, copy.getAssignedToUserId());
     }
 
     @Test
     void setters_updateFieldsCorrectly() {
+        UUID assignedToUserId = UUID.randomUUID();
         PreRequisiteProgram prp = new PreRequisiteProgram(ID, "Sanitation",
-                "Initial description", 1, true);
+                "Initial description", 1, true, assignedToUserId);
 
         assertTrue(prp.getIsActive());
         prp.setIsActive(false);
@@ -57,11 +62,12 @@ class PreRequisiteProgramTest {
     @Test
     void equals_inheritedFromBaseEntity_comparesById() {
         UUID sameId = UUID.randomUUID();
+        UUID assignedToUserId = UUID.randomUUID();
 
         PreRequisiteProgram prp1 = new PreRequisiteProgram(sameId, "Sanitation",
-                "Protocol A", 1, true);
+                "Protocol A", 1, true, assignedToUserId);
         PreRequisiteProgram prp2 = new PreRequisiteProgram(sameId, "Pest Control",
-                "Protocol B", 30, false);
+                "Protocol B", 30, false, assignedToUserId);
 
         assertEquals(prp1, prp2);
         assertEquals(prp1.hashCode(), prp2.hashCode());

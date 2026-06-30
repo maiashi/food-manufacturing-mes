@@ -23,9 +23,11 @@ class CcpMonitoringRecordTest {
         LocalDateTime monitoringDate = LocalDateTime.of(2026, 5, 15, 8, 30);
         Map<String, Double> values = new HashMap<>();
         values.put("temperature", 72.5);
+        Map<String, Double> limitValues = new HashMap<>();
+        limitValues.put("temperature", 75.0);
 
         CcpMonitoringRecord record = new CcpMonitoringRecord(ID, FACTORY_ID, LINE_ID, STEP_ID,
-                BATCH_ID, monitoringDate, values, "PASS", false);
+                BATCH_ID, monitoringDate, values, "PASS", false, limitValues);
 
         assertEquals(ID, record.getId());
         assertEquals(ID, record.getRecordId());
@@ -39,15 +41,20 @@ class CcpMonitoringRecordTest {
         assertEquals(72.5, record.getMeasuredValues().get("temperature"));
         assertEquals("PASS", record.getResult());
         assertFalse(record.getDeviationTaken());
+        assertNotNull(record.getCriticalLimitMap());
+        assertEquals(1, record.getCriticalLimitMap().size());
+        assertEquals(75.0, record.getCriticalLimitMap().get("temperature"));
     }
 
     @Test
     void copy_returnsNewWithDifferentId() {
         Map<String, Double> values = new HashMap<>();
         values.put("pressure", 101.3);
+        Map<String, Double> limitValues = new HashMap<>();
+        limitValues.put("pressure", 105.0);
 
         CcpMonitoringRecord original = new CcpMonitoringRecord(ID, FACTORY_ID, LINE_ID, STEP_ID,
-                BATCH_ID, LocalDateTime.of(2026, 5, 15, 8, 30), values, "PASS", true);
+                BATCH_ID, LocalDateTime.of(2026, 5, 15, 8, 30), values, "PASS", true, limitValues);
 
         UUID newId = UUID.randomUUID();
         CcpMonitoringRecord copy = original.copy(newId);
@@ -58,12 +65,17 @@ class CcpMonitoringRecordTest {
         assertEquals(LINE_ID, copy.getLineId());
         assertEquals(BATCH_ID, copy.getBatchId());
         assertEquals("PASS", copy.getResult());
+        assertTrue(copy.getDeviationTaken());
+        assertNotNull(copy.getCriticalLimitMap());
     }
 
     @Test
     void setters_updateFieldsCorrectly() {
+        Map<String, Double> values = new HashMap<>();
+        Map<String, Double> limitValues = new HashMap<>();
+        
         CcpMonitoringRecord record = new CcpMonitoringRecord(ID, FACTORY_ID, LINE_ID, STEP_ID,
-                BATCH_ID, LocalDateTime.of(2026, 5, 15, 8, 30), null, "PASS", false);
+                BATCH_ID, LocalDateTime.of(2026, 5, 15, 8, 30), values, "PASS", false, limitValues);
 
         assertEquals("PASS", record.getResult());
         record.setResult("FAIL");
@@ -83,9 +95,9 @@ class CcpMonitoringRecordTest {
         UUID sameId = UUID.randomUUID();
 
         CcpMonitoringRecord rec1 = new CcpMonitoringRecord(sameId, FACTORY_ID, LINE_ID, STEP_ID,
-                BATCH_ID, LocalDateTime.of(2026, 5, 15, 8, 30), null, "PASS", false);
+                BATCH_ID, LocalDateTime.of(2026, 5, 15, 8, 30), null, "PASS", false, null);
         CcpMonitoringRecord rec2 = new CcpMonitoringRecord(sameId, UUID.randomUUID(), UUID.randomUUID(),
-                UUID.randomUUID(), UUID.randomUUID(), LocalDateTime.of(2026, 7, 1, 10, 0), null, "FAIL", true);
+                UUID.randomUUID(), UUID.randomUUID(), LocalDateTime.of(2026, 7, 1, 10, 0), null, "FAIL", true, null);
 
         assertEquals(rec1, rec2);
         assertEquals(rec1.hashCode(), rec2.hashCode());

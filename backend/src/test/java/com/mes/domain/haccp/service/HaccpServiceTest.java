@@ -131,7 +131,7 @@ class HaccpServiceTest {
         CcpMonitoringRecord record = new CcpMonitoringRecord(
                 recordId, UUID.randomUUID(), UUID.randomUUID(),
                 UUID.randomUUID(), UUID.randomUUID(), LocalDateTime.now(),
-                Map.of("temperature", 75.0), "FAIL", false);
+                Map.of("temperature", 75.0), "FAIL", false, Map.of("temperature", 75.0));
 
         Capa capa = service.triggerCorrectiveAction(record);
 
@@ -166,6 +166,6 @@ class HaccpServiceTest {
         return new CcpMonitoringRecord(
                 UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(),
                 UUID.randomUUID(), UUID.randomUUID(), LocalDateTime.now(),
-                Map.of("temperature", 75.0), result, false);
+                Map.of("temperature", 75.0), result, false, Map.of("temperature", 75.0));
     }
 }

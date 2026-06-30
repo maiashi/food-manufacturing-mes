@@ -170,6 +170,7 @@ class InventoryServiceTest {
                           LotStatus status, BigDecimal quantity) {
         UUID lotId = UUID.randomUUID();
         return new Lot(lotId, factoryId, lotNumber, materialId, null,
+                null,
                 LocalDate.now(), LocalDate.now().plusDays(180),
                 quantity, status, warehouseId, null, null, null, false);
     }

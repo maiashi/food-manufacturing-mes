@@ -33,6 +33,7 @@ export default tseslint.config(
       'vue/multi-word-component-names': 'off', // Element Plus等で単一単語コンポーネントを許容するため
       '@typescript-eslint/no-explicit-any': 'warn', // any型は警告（必要に応じてoff）
       'vue/no-v-html': 'off', // Element Plusのコンポーネントでhtmlを扱う場合があるため
+      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
     },
   },
 

@@ -12,13 +12,15 @@
     "noEmit": true,
     "jsx": "preserve",
     "strict": true,
+    "types": ["node"],
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
     "paths": {
       "@/*": ["./src/*"]
     },
-    "baseUrl": "."
+    "baseUrl": ".",
+    "ignoreDeprecations": "6.0"
   },
   "include": [
     "src/**/*.ts",
@@ -26,6 +28,5 @@
     "src/**/*.vue",
     "tests/**/*.ts",
     "playwright.config.ts"
-  ],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  ]
 }

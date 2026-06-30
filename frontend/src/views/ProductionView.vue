@@ -253,9 +253,25 @@
 import { ref } from 'vue'
 
 interface ProductionOrder {
-  orderNumber?: string
+  orderNumber: string
+  lineName: string
+  productName: string
+  plannedQty: number
+  unit: string
+  plannedStart: string
+  status: string
+  batchNumber?: string
+  actualQty?: number
+  actualStart?: string
+  steps?: ProductionStep[]
+  inputQty?: number
+  outputQty?: number
+  yieldRate?: number
   selected?: boolean
-  [key: string]: unknown
+}
+
+interface ProductionStep {
+  name: string
 }
 
 const orders = ref<ProductionOrder[]>([])

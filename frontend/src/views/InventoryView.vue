@@ -241,6 +241,7 @@ const inventoryList = ref<InventoryItem[]>([])
 // const { data } = await api.get('/inventories', { params: { factoryCode: selectedFactory.value } })
 
 const fifoViolations = ref<Record<string, unknown>[]>([]) // TODO: FIFO違反チェック
+const EXPIRY_WARNING_DAYS = 30
 
 function formatDate(date: string) {
   return date ? new Date(date).toLocaleDateString('ja-JP') : '--'
@@ -251,7 +252,7 @@ function isExpiringSoon(date: string): boolean {
   const today = new Date()
   const expiry = new Date(date)
   const diffDays = (expiry.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
-  return diffDays >= 0 && diffDays <= 30
+  return diffDays >= 0 && diffDays <= EXPIRY_WARNING_DAYS
 }
 
 function statusType(s: string): 'success' | 'warning' | 'danger' | '' {

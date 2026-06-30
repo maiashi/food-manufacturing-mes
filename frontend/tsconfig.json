@@ -18,14 +18,14 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "baseUrl": "."
+    "baseUrl": ".",
+    "ignoreDeprecations": "6.0"
   },
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
-    "tests/**/*.ts",
-    "playwright.config.ts"
+    "tests/**/*.ts"
   ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

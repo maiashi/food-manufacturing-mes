@@ -123,11 +123,27 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
+interface TraceNode {
+  label: string
+  details: string
+  ccp?: boolean
+  current?: boolean
+  timestamp?: string
+}
+
+interface RecallInfo {
+  recallNumber: string
+  reason: string
+  unitsRecalled: number
+  unitsAffected: number
+  status: string
+}
+
 const searchLot = ref('')
 const traceDirection = ref<'forward' | 'backward'>('forward')
-const traceResult = ref<Record<string, unknown>[] | null>(null)
+const traceResult = ref<TraceNode[] | null>(null)
 const relatedRecords = ref<Record<string, unknown>[]>([])
-const recallInfo = ref<Record<string, unknown> | null>(null)
+const recallInfo = ref<RecallInfo | null>(null)
 
 function executeTrace() {
   console.log('TRACE LOT:', searchLot.value, 'DIRECTION:', traceDirection.value)

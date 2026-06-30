@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.mes.domain.production.service.ProductionServiceTest" tests="21" skipped="0" failures="0" errors="0" timestamp="2026-05-16T04:02:12" hostname="MaiashiM4Mac-mini.local" time="0.012">
+<testsuite name="com.mes.domain.production.service.ProductionServiceTest" tests="21" skipped="0" failures="0" errors="0" timestamp="2026-06-30T14:34:05" hostname="runnervm7b5n9" time="0.067">
   <properties/>
-  <testcase name="canStartBatch_active_returnsFalse()" classname="com.mes.domain.production.service.ProductionServiceTest" time="0.001"/>
-  <testcase name="validateProductionOrder_completedState_throws()" classname="com.mes.domain.production.service.ProductionServiceTest" time="0.001"/>
+  <testcase name="canStartBatch_active_returnsFalse()" classname="com.mes.domain.production.service.ProductionServiceTest" time="0.007"/>
+  <testcase name="validateProductionOrder_completedState_throws()" classname="com.mes.domain.production.service.ProductionServiceTest" time="0.002"/>
   <testcase name="validateProductionOrder_nullFactory_throws()" classname="com.mes.domain.production.service.ProductionServiceTest" time="0.001"/>
-  <testcase name="calculateYield_nullOutput_returnsZero()" classname="com.mes.domain.production.service.ProductionServiceTest" time="0.001"/>
-  <testcase name="validateProductionOrder_nullLineId_throws()" classname="com.mes.domain.production.service.ProductionServiceTest" time="0.0"/>
+  <testcase name="calculateYield_nullOutput_returnsZero()" classname="com.mes.domain.production.service.ProductionServiceTest" time="0.004"/>
+  <testcase name="validateProductionOrder_nullLineId_throws()" classname="com.mes.domain.production.service.ProductionServiceTest" time="0.003"/>
   <testcase name="validateProductionOrder_negativeQty_throws()" classname="com.mes.domain.production.service.ProductionServiceTest" time="0.001"/>
   <testcase name="calculateYield_negativeOutput_throws()" classname="com.mes.domain.production.service.ProductionServiceTest" time="0.001"/>
   <testcase name="calculateYield_normalCase_returnsCorrectRate()" classname="com.mes.domain.production.service.ProductionServiceTest" time="0.0"/>
-  <testcase name="validateProductionOrder_validOrder_passes()" classname="com.mes.domain.production.service.ProductionServiceTest" time="0.0"/>
-  <testcase name="calculateYield_100Percent_yieldIsOne()" classname="com.mes.domain.production.service.ProductionServiceTest" time="0.0"/>
-  <testcase name="canStartBatch_scheduled_returnsTrue()" classname="com.mes.domain.production.service.ProductionServiceTest" time="0.001"/>
-  <testcase name="canStartBatch_completed_returnsFalse()" classname="com.mes.domain.production.service.ProductionServiceTest" time="0.0"/>
-  <testcase name="canStartBatch_paused_returnsTrue()" classname="com.mes.domain.production.service.ProductionServiceTest" time="0.0"/>
-  <testcase name="validateProductionOrder_zeroQty_throws()" classname="com.mes.domain.production.service.ProductionServiceTest" time="0.0"/>
+  <testcase name="validateProductionOrder_validOrder_passes()" classname="com.mes.domain.production.service.ProductionServiceTest" time="0.001"/>
+  <testcase name="calculateYield_100Percent_yieldIsOne()" classname="com.mes.domain.production.service.ProductionServiceTest" time="0.002"/>
+  <testcase name="canStartBatch_scheduled_returnsTrue()" classname="com.mes.domain.production.service.ProductionServiceTest" time="0.002"/>
+  <testcase name="canStartBatch_completed_returnsFalse()" classname="com.mes.domain.production.service.ProductionServiceTest" time="0.002"/>
+  <testcase name="canStartBatch_paused_returnsTrue()" classname="com.mes.domain.production.service.ProductionServiceTest" time="0.001"/>
+  <testcase name="validateProductionOrder_zeroQty_throws()" classname="com.mes.domain.production.service.ProductionServiceTest" time="0.004"/>
   <testcase name="canStartBatch_aborted_returnsFalse()" classname="com.mes.domain.production.service.ProductionServiceTest" time="0.0"/>
   <testcase name="validateProductionOrder_nullStartDate_throws()" classname="com.mes.domain.production.service.ProductionServiceTest" time="0.0"/>
-  <testcase name="calculateYield_inputExceedsOutput_capsAtOne()" classname="com.mes.domain.production.service.ProductionServiceTest" time="0.0"/>
-  <testcase name="calculateYield_zeroOutput_returnsZero()" classname="com.mes.domain.production.service.ProductionServiceTest" time="0.0"/>
+  <testcase name="calculateYield_inputExceedsOutput_capsAtOne()" classname="com.mes.domain.production.service.ProductionServiceTest" time="0.002"/>
+  <testcase name="calculateYield_zeroOutput_returnsZero()" classname="com.mes.domain.production.service.ProductionServiceTest" time="0.002"/>
   <testcase name="calculateYield_nullInput_throws()" classname="com.mes.domain.production.service.ProductionServiceTest" time="0.001"/>
-  <testcase name="calculateYield_zeroInput_throws()" classname="com.mes.domain.production.service.ProductionServiceTest" time="0.0"/>
-  <testcase name="validateProductionOrder_null_throws()" classname="com.mes.domain.production.service.ProductionServiceTest" time="0.0"/>
+  <testcase name="calculateYield_zeroInput_throws()" classname="com.mes.domain.production.service.ProductionServiceTest" time="0.001"/>
+  <testcase name="validateProductionOrder_null_throws()" classname="com.mes.domain.production.service.ProductionServiceTest" time="0.002"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

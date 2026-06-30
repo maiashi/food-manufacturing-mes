@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.mes.domain.haccp.service.HaccpServiceTest" tests="19" skipped="0" failures="0" errors="0" timestamp="2026-05-16T04:02:11" hostname="MaiashiM4Mac-mini.local" time="0.037">
+<testsuite name="com.mes.domain.haccp.service.HaccpServiceTest" tests="19" skipped="0" failures="0" errors="0" timestamp="2026-06-30T14:34:05" hostname="runnervm7b5n9" time="0.068">
   <properties/>
-  <testcase name="triggerCorrectiveAction_fail_createsCapa()" classname="com.mes.domain.haccp.service.HaccpServiceTest" time="0.016"/>
-  <testcase name="assessHazard_boundaryCritical()" classname="com.mes.domain.haccp.service.HaccpServiceTest" time="0.001"/>
+  <testcase name="triggerCorrectiveAction_fail_createsCapa()" classname="com.mes.domain.haccp.service.HaccpServiceTest" time="0.004"/>
+  <testcase name="assessHazard_boundaryCritical()" classname="com.mes.domain.haccp.service.HaccpServiceTest" time="0.005"/>
   <testcase name="assessHazard_boundaryHigh()" classname="com.mes.domain.haccp.service.HaccpServiceTest" time="0.001"/>
   <testcase name="validateCcpRecord_pass_returnsTrue()" classname="com.mes.domain.haccp.service.HaccpServiceTest" time="0.001"/>
   <testcase name="validateCcpRecord_na_returnsTrue()" classname="com.mes.domain.haccp.service.HaccpServiceTest" time="0.001"/>
-  <testcase name="assessHazard_criticalRisk_returnsCritical()" classname="com.mes.domain.haccp.service.HaccpServiceTest" time="0.001"/>
-  <testcase name="triggerCorrectiveAction_fail_capaHasDueDate()" classname="com.mes.domain.haccp.service.HaccpServiceTest" time="0.0"/>
+  <testcase name="assessHazard_criticalRisk_returnsCritical()" classname="com.mes.domain.haccp.service.HaccpServiceTest" time="0.0"/>
+  <testcase name="triggerCorrectiveAction_fail_capaHasDueDate()" classname="com.mes.domain.haccp.service.HaccpServiceTest" time="0.001"/>
   <testcase name="validateCcpRecord_fail_returnsFalse()" classname="com.mes.domain.haccp.service.HaccpServiceTest" time="0.001"/>
   <testcase name="triggerCorrectiveAction_na_returnsNull()" classname="com.mes.domain.haccp.service.HaccpServiceTest" time="0.001"/>
-  <testcase name="assessHazard_mediumRisk_returnsMedium()" classname="com.mes.domain.haccp.service.HaccpServiceTest" time="0.001"/>
-  <testcase name="assessHazard_lowRisk_returnsLow()" classname="com.mes.domain.haccp.service.HaccpServiceTest" time="0.001"/>
+  <testcase name="assessHazard_mediumRisk_returnsMedium()" classname="com.mes.domain.haccp.service.HaccpServiceTest" time="0.004"/>
+  <testcase name="assessHazard_lowRisk_returnsLow()" classname="com.mes.domain.haccp.service.HaccpServiceTest" time="0.004"/>
   <testcase name="validateCcpRecord_null_throws()" classname="com.mes.domain.haccp.service.HaccpServiceTest" time="0.002"/>
-  <testcase name="assessHazard_highRisk_returnsHigh()" classname="com.mes.domain.haccp.service.HaccpServiceTest" time="0.001"/>
+  <testcase name="assessHazard_highRisk_returnsHigh()" classname="com.mes.domain.haccp.service.HaccpServiceTest" time="0.003"/>
   <testcase name="assessHazard_zeroSeverity_returnsLow()" classname="com.mes.domain.haccp.service.HaccpServiceTest" time="0.0"/>
-  <testcase name="assessHazard_boundaryMedium()" classname="com.mes.domain.haccp.service.HaccpServiceTest" time="0.0"/>
-  <testcase name="assessHazard_null_throws()" classname="com.mes.domain.haccp.service.HaccpServiceTest" time="0.0"/>
-  <testcase name="assessHazard_nullScores_treatedAsZero()" classname="com.mes.domain.haccp.service.HaccpServiceTest" time="0.0"/>
+  <testcase name="assessHazard_boundaryMedium()" classname="com.mes.domain.haccp.service.HaccpServiceTest" time="0.001"/>
+  <testcase name="assessHazard_null_throws()" classname="com.mes.domain.haccp.service.HaccpServiceTest" time="0.002"/>
+  <testcase name="assessHazard_nullScores_treatedAsZero()" classname="com.mes.domain.haccp.service.HaccpServiceTest" time="0.003"/>
   <testcase name="validateCcpRecord_caseInsensitivePass()" classname="com.mes.domain.haccp.service.HaccpServiceTest" time="0.001"/>
-  <testcase name="triggerCorrectiveAction_pass_returnsNull()" classname="com.mes.domain.haccp.service.HaccpServiceTest" time="0.0"/>
+  <testcase name="triggerCorrectiveAction_pass_returnsNull()" classname="com.mes.domain.haccp.service.HaccpServiceTest" time="0.002"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

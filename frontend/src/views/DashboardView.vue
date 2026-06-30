@@ -128,7 +128,7 @@ interface AlertItem {
 }
 
 const alerts = ref<AlertItem[]>([])
-const stockAlerts = ref<any[]>([])
+const stockAlerts = ref<Record<string, unknown>[]>([])
 </script>
 
 <style scoped>

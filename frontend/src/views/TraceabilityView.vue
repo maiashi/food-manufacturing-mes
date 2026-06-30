@@ -125,9 +125,9 @@ import { ref } from 'vue'
 
 const searchLot = ref('')
 const traceDirection = ref<'forward' | 'backward'>('forward')
-const traceResult = ref<any[]>(null)
-const relatedRecords = ref<any[]>([])
-const recallInfo = ref<any>(null)
+const traceResult = ref<Record<string, unknown>[] | null>(null)
+const relatedRecords = ref<Record<string, unknown>[]>([])
+const recallInfo = ref<Record<string, unknown> | null>(null)
 
 function executeTrace() {
   console.log('TRACE LOT:', searchLot.value, 'DIRECTION:', traceDirection.value)

@@ -6,7 +6,7 @@
 
 | 層 | 技術 |
 |---|------|
-| **フロントエンド** | Vue 3.5 + Vite 6 + TypeScript 5 + Element Plus |
+| **フロントエンド** | Vue 3.5 + Vite 6 + TypeScript 5 + Element Plus + Node.js 24 |
 | **バックエンド** | Java 21 + Spring Boot 3.4 + jOOQ 3.19 |
 | **データベース** | PostgreSQL 17（factoryパーティション対応） |
 | **IoTブローカー** | EMQX 5.8 (CE) |

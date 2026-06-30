@@ -42,11 +42,9 @@ jobs:
         working-directory: ./frontend
         run: npm run lint
 
-      # TODO: Re-enable after frontend TypeScript issues are fixed
-      # (currently failing in InventoryView/TraceabilityView and missing node/vite typings).
-      - name: TypeScript check (temporarily skipped)
-        if: ${{ false }}
-        run: echo "Skip frontend TypeScript check in CI"
+      - name: TypeScript check
+        working-directory: ./frontend
+        run: npx vue-tsc --noEmit
 
       - name: Unit tests (Vitest)
         working-directory: ./frontend
@@ -54,11 +52,9 @@ jobs:
         env:
           CI: true
 
-      # TODO: Re-enable after frontend build errors are fixed
-      # (currently blocked by duplicate `showSplitDialog` declaration in InventoryView.vue).
-      - name: Build (temporarily skipped)
-        if: ${{ false }}
-        run: echo "Skip frontend build in CI"
+      - name: Build
+        working-directory: ./frontend
+        run: npm run build
 
   # ==================== BACKEND ====================
   backend:

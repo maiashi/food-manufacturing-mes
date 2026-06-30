@@ -118,7 +118,7 @@
 
     <!-- ロット分割ダイアログ -->
     <el-dialog
-      v-model="showSplitDialog"
+      v-model="splitDialogVisible"
       title="ロット分割"
       width="500px"
     >
@@ -145,7 +145,7 @@
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button @click="showSplitDialog = false">
+        <el-button @click="splitDialogVisible = false">
           キャンセル
         </el-button>
         <el-button
@@ -266,20 +266,28 @@ function statusType(s: string): 'success' | 'warning' | 'danger' | '' {
 }
 
 // ロット分割
-const showSplitDialog = ref(false)
+const splitDialogVisible = ref(false)
 const currentLot = ref<InventoryItem | null>(null)
 const splitForm = ref({ count: 2, eachQty: 0 })
 
 function showSplitDialog(item: InventoryItem) {
   currentLot.value = item
-  showSplitDialog.value = true
+  splitDialogVisible.value = true
 }
 
 function executeLotSplit() {
   // TODO: API呼び出し
   // await api.post(`/inventories/${currentLot.value!.lotId}/split`, splitForm.value)
   console.log('LOT SPLIT', currentLot.value, splitForm.value)
-  showSplitDialog.value = false
+  splitDialogVisible.value = false
+}
+
+// 在庫調整
+const adjustDialogVisible = ref(false)
+
+function showAdjustDialog(item: InventoryItem) {
+  currentLot.value = item
+  adjustDialogVisible.value = true
 }
 
 // 受入登録

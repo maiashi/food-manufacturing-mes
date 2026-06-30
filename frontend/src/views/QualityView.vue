@@ -201,9 +201,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-const results = ref<any[]>([])
-const ncrs = ref<any[]>([])
-const specs = ref<any[]>([])
+const results = ref<Record<string, unknown>[]>([])
+const ncrs = ref<Record<string, unknown>[]>([])
+const specs = ref<Record<string, unknown>[]>([])
 const showNewInspection = ref(false)
 const inspectionForm = ref({ lotId: '', specId: '' })
 

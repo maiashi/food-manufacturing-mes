@@ -13,7 +13,7 @@ public abstract class BaseEntity {
     private final UUID id;
     private final LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private LocalDateTime deletedAt;
+    protected LocalDateTime deletedAt;
 
     protected BaseEntity(UUID id, LocalDateTime createdAt) {
         this.id = id;

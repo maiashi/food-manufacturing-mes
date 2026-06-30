@@ -152,13 +152,13 @@ const selectedFactory = ref<string>('FTY-001')
 const activeTab = ref('plans')
 const showAddPlan = ref(false)
 
-const haccpPlans = ref<any[]>([])
+const haccpPlans = ref<Record<string, unknown>[]>([])
 // TODO: API fetch
 
-const ccpRecords = ref<any[]>([])
-const deviations = ref<any[]>([])
-const prpRecords = ref<any[]>([])
-const audits = ref<any[]>([])
+const ccpRecords = ref<Record<string, unknown>[]>([])
+const deviations = ref<Record<string, unknown>[]>([])
+const prpRecords = ref<Record<string, unknown>[]>([])
+const audits = ref<Record<string, unknown>[]>([])
 </script>
 
 <style scoped>

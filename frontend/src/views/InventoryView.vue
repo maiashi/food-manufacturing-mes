@@ -61,8 +61,15 @@
     />
 
     <!-- ロット分割ダイアログ -->
-    <el-dialog v-model="showSplitDialog" title="ロット分割" width="500px">
-      <el-form :model="splitForm" label-width="120px">
+    <el-dialog
+      v-model="splitDialogVisible"
+      title="ロット分割"
+      width="500px"
+    >
+      <el-form
+        :model="splitForm"
+        label-width="120px"
+      >
         <el-form-item label="対象ロット">
           <span>{{ currentLot?.lotNumber }}</span>
         </el-form-item>
@@ -74,7 +81,7 @@
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button @click="showSplitDialog = false">キャンセル</el-button>
+        <el-button @click="splitDialogVisible = false">キャンセル</el-button>
         <el-button type="primary" @click="executeLotSplit">分割実行</el-button>
       </template>
     </el-dialog>
@@ -149,15 +156,19 @@ const inventoryList = ref<InventoryItem[]>([])
 // TODO: API fetch
 // const { data } = await api.get('/inventories', { params: { factoryCode: selectedFactory.value } })
 
-const fifoViolations = ref<any[]>([]) // TODO: FIFO違反チェック
+const fifoViolations = ref<Record<string, unknown>[]>([]) // TODO: FIFO違反チェック
+const EXPIRY_WARNING_DAYS = 30
 
 function formatDate(date: string) {
   return date ? new Date(date).toLocaleDateString('ja-JP') : '--'
 }
 
-function isExpiringSoon(_date: string): 'warning' {
-  // TODO: 30日以内のexpiryをチェック
-  return 'warning'
+function isExpiringSoon(date: string): boolean {
+  if (!date) return false
+  const today = new Date()
+  const expiry = new Date(date)
+  const diffDays = (expiry.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
+  return diffDays >= 0 && diffDays <= EXPIRY_WARNING_DAYS
 }
 
 function statusType(s: string): 'success' | 'warning' | 'danger' | 'primary' | 'info' {
@@ -171,20 +182,28 @@ function statusType(s: string): 'success' | 'warning' | 'danger' | 'primary' | '
 }
 
 // ロット分割
-const showSplitDialog = ref(false)
+const splitDialogVisible = ref(false)
 const currentLot = ref<InventoryItem | null>(null)
 const splitForm = ref({ count: 2, eachQty: 0 })
 
 function openSplitDialog(item: InventoryItem) {
   currentLot.value = item
-  showSplitDialog.value = true
+  splitDialogVisible.value = true
 }
 
 function executeLotSplit() {
   // TODO: API呼び出し
   // await api.post(`/inventories/${currentLot.value!.lotId}/split`, splitForm.value)
   console.log('LOT SPLIT', currentLot.value, splitForm.value)
-  showSplitDialog.value = false
+  splitDialogVisible.value = false
+}
+
+// 在庫調整
+const adjustDialogVisible = ref(false)
+
+function showAdjustDialog(item: InventoryItem) {
+  currentLot.value = item
+  adjustDialogVisible.value = true
 }
 
 // 在庫調整（TODO: 実装時に使用）

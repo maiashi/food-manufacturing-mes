@@ -9,6 +9,7 @@ export default tseslint.config(
       '**/node_modules/**',
       '**/dist/**',
       '**/vendor/**',
+      '**/*.d.ts',
     ],
   },
 

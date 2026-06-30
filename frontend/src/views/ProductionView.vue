@@ -29,14 +29,14 @@
         </el-table-column>
         <el-table-column label="操作" width="280">
           <template #default="{ row }">
-            <el-button v-if="row.status === 'PLANNED'" size="small" @click="startBatch(row)">
+            <el-button v-if="row.status === 'PLANNED'" size="small" @click="startBatch(row as ProductionOrder)">
               開始
             </el-button>
             <el-button
               v-if="row.status === 'IN_PROGRESS'"
               size="small"
               type="success"
-              @click="completeBatch(row)"
+              @click="completeBatch(row as ProductionOrder)"
             >
               完了
             </el-button>
@@ -44,11 +44,11 @@
               v-if="row.status === 'PLANNED' || row.status === 'IN_PROGRESS'"
               size="small"
               type="warning"
-              @click="pauseBatch(row)"
+              @click="pauseBatch(row as ProductionOrder)"
             >
               一時停止
             </el-button>
-            <el-button size="small" @click="showOrderDetail(row)">詳細</el-button>
+            <el-button size="small" @click="showOrderDetail(row as ProductionOrder)">詳細</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -132,7 +132,29 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-const orders = ref<any[]>([])
+interface ProductionOrder {
+  orderNumber: string
+  lineName: string
+  productName: string
+  plannedQty: number
+  unit: string
+  plannedStart: string
+  status: string
+  batchNumber?: string
+  actualQty?: number
+  actualStart?: string
+  steps?: ProductionStep[]
+  inputQty?: number
+  outputQty?: number
+  yieldRate?: number
+  selected?: boolean
+}
+
+interface ProductionStep {
+  name: string
+}
+
+const orders = ref<ProductionOrder[]>([])
 // TODO: API fetch
 // const { data } = await api.get('/production-orders', { params: { factoryCode: selectedFactory.value } })
 
@@ -146,8 +168,8 @@ const products = [
   { productId: 'p-002', productName: '惣菜B (500g)' },
 ]
 
-const selectedBatch = ref<any>(null)
-const ccpRecords = ref<any[]>([])
+const selectedBatch = ref<ProductionOrder | null>(null)
+const ccpRecords = ref<Record<string, unknown>[]>([])
 
 function orderStatusType(s: string): 'success' | 'warning' | 'danger' | 'primary' | 'info' {
   const map: Record<string, 'success' | 'warning' | 'danger' | 'primary' | 'info'> = {
@@ -160,19 +182,10 @@ function orderStatusType(s: string): 'success' | 'warning' | 'danger' | 'primary
   return map[s] || 'primary'
 }
 
-function startBatch(row: any) {
-  console.log('START', row.orderNumber)
-}
-function completeBatch(row: any) {
-  console.log('COMPLETE', row.orderNumber)
-}
-function pauseBatch(row: any) {
-  console.log('PAUSE', row.orderNumber)
-}
-function showOrderDetail(row: any) {
-  selectedBatch.value = row
-  orders.value.forEach((o) => (o.selected = o === row))
-}
+function startBatch(row: ProductionOrder) { console.log('START', row.orderNumber) }
+function completeBatch(row: ProductionOrder) { console.log('COMPLETE', row.orderNumber) }
+function pauseBatch(row: ProductionOrder) { console.log('PAUSE', row.orderNumber) }
+function showOrderDetail(row: ProductionOrder) { selectedBatch.value = row; orders.value.forEach(o => o.selected = (o === row)) }
 const showCreateOrder = ref(false)
 const newOrderForm = ref({ lineId: '', productId: '', plannedQty: 0, plannedStart: '' })
 

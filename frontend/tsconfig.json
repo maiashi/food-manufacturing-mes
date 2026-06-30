@@ -12,6 +12,7 @@
     "noEmit": true,
     "jsx": "preserve",
     "strict": true,
+    "types": ["node"],
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
@@ -26,6 +27,5 @@
     "src/**/*.tsx",
     "src/**/*.vue",
     "tests/**/*.ts"
-  ],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  ]
 }

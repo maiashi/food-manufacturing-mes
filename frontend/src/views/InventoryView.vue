@@ -3,41 +3,104 @@
     <div class="page-header">
       <h2>在庫管理</h2>
       <div class="actions">
-        <el-select v-model="selectedFactory" placeholder="工場選択" style="width: 200px;">
-          <el-option v-for="f in factories" :key="f.factoryId" :label="f.factoryName" :value="f.factoryCode" />
+        <el-select
+          v-model="selectedFactory"
+          placeholder="工場選択"
+          style="width: 200px;"
+        >
+          <el-option
+            v-for="f in factories"
+            :key="f.factoryId"
+            :label="f.factoryName"
+            :value="f.factoryCode"
+          />
         </el-select>
-        <el-button type="success" @click="showReceiveDialog = true">受入登録</el-button>
+        <el-button
+          type="success"
+          @click="showReceiveDialog = true"
+        >
+          受入登録
+        </el-button>
       </div>
     </div>
 
     <!-- 在庫ツリー：工場 → 倉庫 → ゾーン →棚 → Bin -->
     <el-card class="location-tree">
-      <template #header>保管場所別在庫</template>
-      <el-table :data="inventoryList" stripe row-key="lotId" style="width: 100%">
-        <el-table-column prop="locationPath" label="保管場所" width="280" />
-        <el-table-column prop="materialName" label="品目" min-width="150" />
-        <el-table-column prop="lotNumber" label="ロット番号" width="160" />
-        <el-table-column prop="quantity" label="残量" width="120" sortable>
+      <template #header>
+        保管場所別在庫
+      </template>
+      <el-table
+        :data="inventoryList"
+        stripe
+        row-key="lotId"
+        style="width: 100%"
+      >
+        <el-table-column
+          prop="locationPath"
+          label="保管場所"
+          width="280"
+        />
+        <el-table-column
+          prop="materialName"
+          label="品目"
+          min-width="150"
+        />
+        <el-table-column
+          prop="lotNumber"
+          label="ロット番号"
+          width="160"
+        />
+        <el-table-column
+          prop="quantity"
+          label="残量"
+          width="120"
+          sortable
+        >
           <template #default="{ row }">
             {{ row.quantity }} {{ row.unit }}
           </template>
         </el-table-column>
-        <el-table-column prop="expiryDate" label="expiry日" width="120" sortable>
+        <el-table-column
+          prop="expiryDate"
+          label="expiry日"
+          width="120"
+          sortable
+        >
           <template #default="{ row }">
             <el-tag :type="isExpiringSoon(row.expiryDate) ? 'warning' : ''">
               {{ formatDate(row.expiryDate) }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="status" label="状態" width="100">
+        <el-table-column
+          prop="status"
+          label="状態"
+          width="100"
+        >
           <template #default="{ row }">
-            <el-tag :type="statusType(row.status)">{{ row.status }}</el-tag>
+            <el-tag :type="statusType(row.status)">
+              {{ row.status }}
+            </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="120">
+        <el-table-column
+          label="操作"
+          width="120"
+        >
           <template #default="{ row }">
-            <el-button size="small" @click="showSplitDialog(row)">分割</el-button>
-            <el-button size="small" type="danger" @click="showAdjustDialog(row)">調整</el-button>
+            <el-button
+              size="small"
+              @click="showSplitDialog(row)"
+            >
+              分割
+            </el-button>
+            <el-button
+              size="small"
+              type="danger"
+              @click="showAdjustDialog(row)"
+            >
+              調整
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -54,45 +117,97 @@
     />
 
     <!-- ロット分割ダイアログ -->
-    <el-dialog v-model="showSplitDialog" title="ロット分割" width="500px">
-      <el-form :model="splitForm" label-width="120px">
+    <el-dialog
+      v-model="showSplitDialog"
+      title="ロット分割"
+      width="500px"
+    >
+      <el-form
+        :model="splitForm"
+        label-width="120px"
+      >
         <el-form-item label="対象ロット">
           <span>{{ currentLot?.lotNumber }}</span>
         </el-form-item>
         <el-form-item label="分割数">
-          <el-input-number v-model="splitForm.count" :min="2" :max="10" />
+          <el-input-number
+            v-model="splitForm.count"
+            :min="2"
+            :max="10"
+          />
         </el-form-item>
         <el-form-item label="各ロット数量">
-          <el-input-number v-model="splitForm.eachQty" :precision="4" :step="1" />
+          <el-input-number
+            v-model="splitForm.eachQty"
+            :precision="4"
+            :step="1"
+          />
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button @click="showSplitDialog = false">キャンセル</el-button>
-        <el-button type="primary" @click="executeLotSplit">分割実行</el-button>
+        <el-button @click="showSplitDialog = false">
+          キャンセル
+        </el-button>
+        <el-button
+          type="primary"
+          @click="executeLotSplit"
+        >
+          分割実行
+        </el-button>
       </template>
     </el-dialog>
 
     <!-- 受入登録ダイアログ -->
-    <el-dialog v-model="showReceiveDialog" title="受入登録" width="600px">
-      <el-form :model="receiveForm" label-width="120px">
+    <el-dialog
+      v-model="showReceiveDialog"
+      title="受入登録"
+      width="600px"
+    >
+      <el-form
+        :model="receiveForm"
+        label-width="120px"
+      >
         <el-form-item label="Purchase Order No.">
           <el-input v-model="receiveForm.poNumber" />
         </el-form-item>
         <el-form-item label="品目">
-          <el-select v-model="receiveForm.materialId" filterable>
-            <el-option v-for="m in materials" :key="m.materialId" :label="m.materialName" :value="m.materialId" />
+          <el-select
+            v-model="receiveForm.materialId"
+            filterable
+          >
+            <el-option
+              v-for="m in materials"
+              :key="m.materialId"
+              :label="m.materialName"
+              :value="m.materialId"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="数量">
-          <el-input-number v-model="receiveForm.quantity" :precision="4" :step="1" />
+          <el-input-number
+            v-model="receiveForm.quantity"
+            :precision="4"
+            :step="1"
+          />
         </el-form-item>
         <el-form-item label="expiry日">
-          <el-date-picker v-model="receiveForm.expiryDate" type="date" value-format="YYYY-MM-DD" />
+          <el-date-picker
+            v-model="receiveForm.expiryDate"
+            type="date"
+            value-format="YYYY-MM-DD"
+          />
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button @click="showReceiveDialog = false">キャンセル</el-button>
-        <el-button type="primary" @click="executeReceipt">受入実行</el-button>
+        <el-button @click="showReceiveDialog = false">
+          キャンセル
+        </el-button>
+        <el-button
+          type="primary"
+          @click="executeReceipt"
+        >
+          受入実行
+        </el-button>
       </template>
     </el-dialog>
   </div>

@@ -1,20 +1,37 @@
 <template>
   <el-container class="app-container">
-    <el-header height="60px" class="app-header">
+    <el-header
+      height="60px"
+      class="app-header"
+    >
       <div class="header-content">
-        <h1 class="logo">Food MES</h1>
+        <h1 class="logo">
+          Food MES
+        </h1>
         <el-menu
           :default-active="$route.path"
           mode="horizontal"
           router
           class="main-nav"
         >
-          <el-menu-item index="/dashboard">ダッシュボード</el-menu-item>
-          <el-menu-item index="/inventory">在庫管理</el-menu-item>
-          <el-menu-item index="/production">製造実行</el-menu-item>
-          <el-menu-item index="/haccp">HACCP管理</el-menu-item>
-          <el-menu-item index="/quality">品質管理</el-menu-item>
-          <el-menu-item index="/traceability">トレーサビリティ</el-menu-item>
+          <el-menu-item index="/dashboard">
+            ダッシュボード
+          </el-menu-item>
+          <el-menu-item index="/inventory">
+            在庫管理
+          </el-menu-item>
+          <el-menu-item index="/production">
+            製造実行
+          </el-menu-item>
+          <el-menu-item index="/haccp">
+            HACCP管理
+          </el-menu-item>
+          <el-menu-item index="/quality">
+            品質管理
+          </el-menu-item>
+          <el-menu-item index="/traceability">
+            トレーサビリティ
+          </el-menu-item>
         </el-menu>
       </div>
     </el-header>

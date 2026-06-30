@@ -3,11 +3,17 @@
     <h2>ダッシュボード</h2>
     <!-- TODO: 各工場の生産状況カード -->
     <el-row :gutter="20">
-      <el-col :span="8" v-for="factory in factories" :key="factory.factoryId">
+      <el-col
+        v-for="factory in factories"
+        :key="factory.factoryId"
+        :span="8"
+      >
         <el-card class="factory-card">
           <template #header>
             <span>{{ factory.factoryName }}</span>
-            <el-tag :type="factory.statusType">{{ factory.statusText }}</el-tag>
+            <el-tag :type="factory.statusType">
+              {{ factory.statusText }}
+            </el-tag>
           </template>
           <div class="metric-grid">
             <div class="metric-item">
@@ -29,25 +35,65 @@
 
     <!-- TODO: CCPアラート一覧 -->
     <el-card class="alert-section">
-      <template #header>HACCP CCP アラート</template>
-      <el-table :data="alerts" stripe>
-        <el-table-column prop="factoryName" label="工場" />
-        <el-table-column prop="lineName" label="ライン" />
-        <el-table-column prop="stepName" label="工程" />
-        <el-table-column prop="alertTime" label="時刻" />
-        <el-table-column prop="description" label="内容" />
+      <template #header>
+        HACCP CCP アラート
+      </template>
+      <el-table
+        :data="alerts"
+        stripe
+      >
+        <el-table-column
+          prop="factoryName"
+          label="工場"
+        />
+        <el-table-column
+          prop="lineName"
+          label="ライン"
+        />
+        <el-table-column
+          prop="stepName"
+          label="工程"
+        />
+        <el-table-column
+          prop="alertTime"
+          label="時刻"
+        />
+        <el-table-column
+          prop="description"
+          label="内容"
+        />
       </el-table>
     </el-card>
 
     <!-- TODO: 在庫アラート -->
     <el-card class="stock-section">
-      <template #header>在庫アラート</template>
-      <el-table :data="stockAlerts" stripe>
-        <el-table-column prop="factoryName" label="工場" />
-        <el-table-column prop="lotNumber" label="ロット番号" />
-        <el-table-column prop="materialName" label="品目" />
-        <el-table-column prop="quantity" label="残量" />
-        <el-table-column prop="expiryDate" label=" expiry" />
+      <template #header>
+        在庫アラート
+      </template>
+      <el-table
+        :data="stockAlerts"
+        stripe
+      >
+        <el-table-column
+          prop="factoryName"
+          label="工場"
+        />
+        <el-table-column
+          prop="lotNumber"
+          label="ロット番号"
+        />
+        <el-table-column
+          prop="materialName"
+          label="品目"
+        />
+        <el-table-column
+          prop="quantity"
+          label="残量"
+        />
+        <el-table-column
+          prop="expiryDate"
+          label=" expiry"
+        />
       </el-table>
     </el-card>
   </div>

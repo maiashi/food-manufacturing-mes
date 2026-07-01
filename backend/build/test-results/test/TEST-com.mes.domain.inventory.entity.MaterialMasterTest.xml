@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.mes.domain.inventory.entity.MaterialMasterTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-07-01T11:30:39" hostname="runnervm7b5n9" time="0.011">
-  <properties/>
-  <testcase name="copy_createsNewInstanceWithDifferentId()" classname="com.mes.domain.inventory.entity.MaterialMasterTest" time="0.003"/>
-  <testcase name="equalsAndHashCode_worksViaBaseEntity()" classname="com.mes.domain.inventory.entity.MaterialMasterTest" time="0.001"/>
-  <testcase name="fullConstructor_setsAllFields()" classname="com.mes.domain.inventory.entity.MaterialMasterTest" time="0.002"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

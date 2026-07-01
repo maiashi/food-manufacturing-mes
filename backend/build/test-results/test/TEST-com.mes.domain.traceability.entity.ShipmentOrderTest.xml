@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.mes.domain.traceability.entity.ShipmentOrderTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-06-30T14:34:07" hostname="runnervm7b5n9" time="0.006">
+<testsuite name="com.mes.domain.traceability.entity.ShipmentOrderTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-07-01T11:30:41" hostname="runnervm7b5n9" time="0.006">
   <properties/>
-  <testcase name="constructor_allFields()" classname="com.mes.domain.traceability.entity.ShipmentOrderTest" time="0.002"/>
+  <testcase name="constructor_allFields()" classname="com.mes.domain.traceability.entity.ShipmentOrderTest" time="0.001"/>
   <testcase name="copy_returnsNewWithDifferentId()" classname="com.mes.domain.traceability.entity.ShipmentOrderTest" time="0.001"/>
   <testcase name="copyPreservesAllFields()" classname="com.mes.domain.traceability.entity.ShipmentOrderTest" time="0.001"/>
   <testcase name="setters()" classname="com.mes.domain.traceability.entity.ShipmentOrderTest" time="0.001"/>

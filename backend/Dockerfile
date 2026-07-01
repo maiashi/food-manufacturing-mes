@@ -25,7 +25,7 @@ RUN gradle shadowJar -x test --no-daemon
 FROM eclipse-temurin:21-jre-alpine AS runtime
 WORKDIR /app
 
-ARG JAR_FILE=build/libs/*.jar
+ARG JAR_FILE=/home/gradle/src/build/libs/*-all.jar
 COPY --from=build ${JAR_FILE} app.jar
 
 RUN addgroup -S spring && adduser -S spring -G spring && chown -R spring:spring /app
@@ -34,7 +34,7 @@ USER spring
 EXPOSE 8080
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
-  CMD wget -qO- http://localhost:8080/actuator/health | grep -q "status.*UP"
+  CMD wget -qO- http://localhost:8080/api/v1/actuator/health | grep -q "status.*UP"
 
 CMD java \
      -XX:+UseG1GC \

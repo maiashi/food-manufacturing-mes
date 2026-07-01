@@ -227,7 +227,7 @@ CREATE TABLE lot (
 
 -- lotテーブルのfactoryパーティション分割
 CREATE TABLE lot_partition (
-    lot_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    lot_id UUID DEFAULT gen_random_uuid(),
     factory_id VARCHAR(20) NOT NULL,
     lot_number VARCHAR(100) NOT NULL,
     material_id UUID REFERENCES material_master(material_id),
@@ -240,7 +240,8 @@ CREATE TABLE lot_partition (
     supplier_id UUID REFERENCES supplier(supplier_id),
     received_date DATE,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-    UNIQUE(factory_id, lot_number)
+    UNIQUE(factory_id, lot_number),
+    PRIMARY KEY (lot_id, factory_id)
 ) PARTITION BY LIST (factory_id);
 
 CREATE TABLE lot_factory_001 PARTITION OF lot_partition FOR VALUES IN ('FTY-001');
@@ -625,7 +626,7 @@ CREATE INDEX idx_ccp_record_batch ON ccp_monitoring_record(batch_id);
 
 -- 認証・権限
 CREATE INDEX idx_user_role_user ON user_role(user_id);
-CREATE INDEX idx_user_factory ON user(factory_id);
+CREATE INDEX idx_user_factory ON "mes_user"(factory_id);
 
 -- IF連携ログ（高速検索）
 CREATE INDEX idx_integration_log_config ON integration_log(config_id, started_at DESC);

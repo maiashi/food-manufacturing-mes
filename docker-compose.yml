@@ -45,19 +45,28 @@ services:
       - "8883:8883"     # MQTT (TLS)
       - "8084:8084"     # MQTT (TLS WebSocket)
     environment:
-      EMQX_NODE_NAME: emqx@mes-emqx
-      EMQX_CLUSTER_DISCOVERY_STRATEGY: static
-      EMQX_CLUSTER_STATIC_SEEDS: emqx@mes-emqx
-      EMQX_DASHBOARD_DEFAULT_USERNAME: admin
-      EMQX_DASHBOARD_DEFAULT_PASSWORD: mes_emqx_admin
+      EMQX_NODE__NAME: emqx@127.0.0.1
+      EMQX_NODE__COOKIE: emqx_secret_cookie_mes
+      EMQX_CLUSTER__DISCOVERY_STRATEGY: static
+      EMQX_CLUSTER__STATIC__SEEDS: emqx@127.0.0.1
+
+      EMQX_DASHBOARD__DEFAULT_USERNAME: admin
+      EMQX_DASHBOARD__DEFAULT_PASSWORD: mes_emqx_admin
+
+      EMQX_LISTENERS__WS__DEFAULT__MAX_CONNECTIONS: 1000
+
+      EMQX_AUTH__POSTGRESQL__SERVER: "postgres:5432"
+      EMQX_AUTH__POSTGRESQL__DATABASE: "mes_dev"
+      EMQX_AUTH__POSTGRESQL__USERNAME: "mes_admin"
+      EMQX_AUTH__POSTGRESQL__PASSWORD: "mes_secret"
     volumes:
-      - ./infrastructure/emqx/conf:/opt/emqx/etc
       - emqx-data:/opt/emqx/data
     healthcheck:
       test: ["CMD", "/opt/emqx/bin/emqx_ctl", "status"]
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 30s
 
   # ---- Zookeeper (Kafka用) ----
   zookeeper:
@@ -88,6 +97,7 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:9092,EXTERNAL://0.0.0.0:9093
       KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:9092,EXTERNAL://localhost:9093
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
@@ -100,6 +110,12 @@ services:
         condition: service_healthy
     volumes:
       - kafka-data:/var/lib/kafka/data
+    healthcheck:
+      test: ["CMD", "cub", "kafka-ready", "1", "5", "-b", "kafka:9092"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 25s
 
   # ---- Redis (キャッシュ/セッション) ----
   redis:
@@ -143,6 +159,9 @@ services:
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       # JWT
       JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
+      # Redis
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
     depends_on:
       postgres:
         condition: service_healthy
@@ -184,8 +203,10 @@ services:
     volumes:
       - ./infrastructure/nginx/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
-      - frontend
-      - backend
+      frontend:
+        condition: service_started
+      backend:
+        condition: service_healthy
 
 volumes:
   pgdata:

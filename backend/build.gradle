@@ -32,6 +32,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
     // --- Kafka ---
     implementation 'org.springframework.kafka:spring-kafka:3.2.2'
@@ -87,6 +88,27 @@ dependencies {
  * ============================================================ */
 springBoot {
     mainClass = 'com.mes.MesApplication'
+}
+
+/* ============================================================
+ * Shadow JAR Task Configuration
+ * ============================================================ */
+shadowJar {
+    archiveClassifier.set('all')
+
+    manifest {
+        attributes 'Main-Class': springBoot.mainClass.get()
+    }
+
+
+    mergeServiceFiles()
+
+    append('META-INF/spring.handlers')
+    append('META-INF/spring.schemas')
+    append('META-INF/spring.tooling')
+    append('META-INF/spring.factories')
+
+    append('META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports')
 }
 
 /* ============================================================

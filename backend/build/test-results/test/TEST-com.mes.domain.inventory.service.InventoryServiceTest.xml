@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.mes.domain.inventory.service.InventoryServiceTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-06-30T14:34:05" hostname="runnervm7b5n9" time="1.291">
+<testsuite name="com.mes.domain.inventory.service.InventoryServiceTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-07-01T11:30:40" hostname="runnervm7b5n9" time="1.061">
   <properties/>
-  <testcase name="getAvailableStock_filtersByMaterial()" classname="com.mes.domain.inventory.service.InventoryServiceTest" time="1.216"/>
-  <testcase name="allocateStock_quarantinedLotThrows()" classname="com.mes.domain.inventory.service.InventoryServiceTest" time="0.01"/>
-  <testcase name="allocateStock_validLotSucceeds()" classname="com.mes.domain.inventory.service.InventoryServiceTest" time="0.031"/>
-  <testcase name="allocateStock_partialAllocation()" classname="com.mes.domain.inventory.service.InventoryServiceTest" time="0.005"/>
-  <testcase name="allocateStock_nonExistentLotThrows()" classname="com.mes.domain.inventory.service.InventoryServiceTest" time="0.005"/>
-  <testcase name="releaseAllocation_succeeds()" classname="com.mes.domain.inventory.service.InventoryServiceTest" time="0.005"/>
-  <testcase name="getAvailableStock_returnsOnlyMatchingLots()" classname="com.mes.domain.inventory.service.InventoryServiceTest" time="0.004"/>
-  <testcase name="allocateStock_insufficientQtyThrows()" classname="com.mes.domain.inventory.service.InventoryServiceTest" time="0.004"/>
-  <testcase name="getAvailableStock_emptyWarehouseReturnsEmptyList()" classname="com.mes.domain.inventory.service.InventoryServiceTest" time="0.003"/>
+  <testcase name="getAvailableStock_filtersByMaterial()" classname="com.mes.domain.inventory.service.InventoryServiceTest" time="1.011"/>
+  <testcase name="allocateStock_quarantinedLotThrows()" classname="com.mes.domain.inventory.service.InventoryServiceTest" time="0.008"/>
+  <testcase name="allocateStock_validLotSucceeds()" classname="com.mes.domain.inventory.service.InventoryServiceTest" time="0.02"/>
+  <testcase name="allocateStock_partialAllocation()" classname="com.mes.domain.inventory.service.InventoryServiceTest" time="0.003"/>
+  <testcase name="allocateStock_nonExistentLotThrows()" classname="com.mes.domain.inventory.service.InventoryServiceTest" time="0.003"/>
+  <testcase name="releaseAllocation_succeeds()" classname="com.mes.domain.inventory.service.InventoryServiceTest" time="0.004"/>
+  <testcase name="getAvailableStock_returnsOnlyMatchingLots()" classname="com.mes.domain.inventory.service.InventoryServiceTest" time="0.003"/>
+  <testcase name="allocateStock_insufficientQtyThrows()" classname="com.mes.domain.inventory.service.InventoryServiceTest" time="0.002"/>
+  <testcase name="getAvailableStock_emptyWarehouseReturnsEmptyList()" classname="com.mes.domain.inventory.service.InventoryServiceTest" time="0.002"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build what is described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#0.3
 WARNING: A Java agent has been loaded dynamically (/home/runner/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy-agent/1.15.11/a38b16385e867f59a641330f0362ebe742788ed8/byte-buddy-agent-1.15.11.jar)

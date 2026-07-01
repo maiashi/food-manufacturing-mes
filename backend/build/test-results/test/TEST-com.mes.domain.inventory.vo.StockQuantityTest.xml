@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.mes.domain.inventory.vo.StockQuantityTest" tests="13" skipped="0" failures="0" errors="0" timestamp="2026-06-30T14:34:05" hostname="runnervm7b5n9" time="0.051">
+<testsuite name="com.mes.domain.inventory.vo.StockQuantityTest" tests="13" skipped="0" failures="0" errors="0" timestamp="2026-07-01T11:30:39" hostname="runnervm7b5n9" time="0.032">
   <properties/>
-  <testcase name="subtract_handlesNullArgument()" classname="com.mes.domain.inventory.vo.StockQuantityTest" time="0.005"/>
-  <testcase name="constructor_rejectsNegativeAmount()" classname="com.mes.domain.inventory.vo.StockQuantityTest" time="0.004"/>
-  <testcase name="constructor_acceptsNonNegativeAmount()" classname="com.mes.domain.inventory.vo.StockQuantityTest" time="0.004"/>
-  <testcase name="toBigDecimalReturnsExactValue()" classname="com.mes.domain.inventory.vo.StockQuantityTest" time="0.001"/>
-  <testcase name="equalityBasedOnValueNotReference()" classname="com.mes.domain.inventory.vo.StockQuantityTest" time="0.001"/>
-  <testcase name="subtract_rejectsNegativeResult()" classname="com.mes.domain.inventory.vo.StockQuantityTest" time="0.002"/>
-  <testcase name="isPositive()" classname="com.mes.domain.inventory.vo.StockQuantityTest" time="0.001"/>
-  <testcase name="subtract_returnsNewQuantity()" classname="com.mes.domain.inventory.vo.StockQuantityTest" time="0.001"/>
-  <testcase name="toStringIsInformative()" classname="com.mes.domain.inventory.vo.StockQuantityTest" time="0.008"/>
+  <testcase name="subtract_handlesNullArgument()" classname="com.mes.domain.inventory.vo.StockQuantityTest" time="0.002"/>
+  <testcase name="constructor_rejectsNegativeAmount()" classname="com.mes.domain.inventory.vo.StockQuantityTest" time="0.002"/>
+  <testcase name="constructor_acceptsNonNegativeAmount()" classname="com.mes.domain.inventory.vo.StockQuantityTest" time="0.001"/>
+  <testcase name="toBigDecimalReturnsExactValue()" classname="com.mes.domain.inventory.vo.StockQuantityTest" time="0.0"/>
+  <testcase name="equalityBasedOnValueNotReference()" classname="com.mes.domain.inventory.vo.StockQuantityTest" time="0.0"/>
+  <testcase name="subtract_rejectsNegativeResult()" classname="com.mes.domain.inventory.vo.StockQuantityTest" time="0.001"/>
+  <testcase name="isPositive()" classname="com.mes.domain.inventory.vo.StockQuantityTest" time="0.0"/>
+  <testcase name="subtract_returnsNewQuantity()" classname="com.mes.domain.inventory.vo.StockQuantityTest" time="0.0"/>
+  <testcase name="toStringIsInformative()" classname="com.mes.domain.inventory.vo.StockQuantityTest" time="0.006"/>
   <testcase name="add_handlesNullArgument()" classname="com.mes.domain.inventory.vo.StockQuantityTest" time="0.001"/>
-  <testcase name="add_returnsNewQuantity()" classname="com.mes.domain.inventory.vo.StockQuantityTest" time="0.001"/>
+  <testcase name="add_returnsNewQuantity()" classname="com.mes.domain.inventory.vo.StockQuantityTest" time="0.0"/>
   <testcase name="isEqualToZero()" classname="com.mes.domain.inventory.vo.StockQuantityTest" time="0.001"/>
-  <testcase name="constructor_rejectsNull()" classname="com.mes.domain.inventory.vo.StockQuantityTest" time="0.001"/>
+  <testcase name="constructor_rejectsNull()" classname="com.mes.domain.inventory.vo.StockQuantityTest" time="0.002"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

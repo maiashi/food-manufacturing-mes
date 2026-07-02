@@ -1358,14 +1358,7 @@ public class InventoryService {
      * @return list of available storage locations
      */
     public List<StorageLocation> getAvailableStorageLocationsForCategory(String category) {
-        List<StorageLocation> locations = new java.util.ArrayList<>();
-
-        // Note: In a real implementation, we would need to add a findAll method to the repositories
-        // or use a different approach to get all warehouses and zones. For now, this is a placeholder.
-        // In the actual application, this would be implemented using the repository's query methods
-        // or by adding a findAll method to the repository interfaces.
-
-        return locations;
+        throw new UnsupportedOperationException("getAvailableStorageLocationsForCategory is not implemented yet");
     }
 
     /**

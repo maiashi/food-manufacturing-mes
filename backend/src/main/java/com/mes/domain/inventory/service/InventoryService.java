@@ -1078,21 +1078,31 @@ public class InventoryService {
         }
 
         // Validate based on temperature zone
+        // Warning threshold: within 2°C of the acceptable limit
+        // Violation threshold: exceeds the acceptable limit by more than 2°C
         if ("常温".equals(zoneTempZone)) {
-            if (temperature.compareTo(new BigDecimal("15")) < 0 || temperature.compareTo(new BigDecimal("25")) > 0) {
+            if (temperature.compareTo(new BigDecimal("13")) < 0 || temperature.compareTo(new BigDecimal("27")) > 0) {
                 return "常温ゾーンでの温度逸脱: 15-25℃の範囲が必要です。現在の温度: " + temperature + "℃";
+            } else if (temperature.compareTo(new BigDecimal("15")) < 0 || temperature.compareTo(new BigDecimal("25")) > 0) {
+                return "警告: 常温ゾーンの温度が許容範囲に近づいています。現在の温度: " + temperature + "℃";
             }
         } else if ("冷蔵".equals(zoneTempZone)) {
-            if (temperature.compareTo(new BigDecimal("0")) < 0 || temperature.compareTo(new BigDecimal("10")) > 0) {
+            if (temperature.compareTo(new BigDecimal("-2")) < 0 || temperature.compareTo(new BigDecimal("12")) > 0) {
                 return "冷蔵ゾーンでの温度逸脱: 0-10℃の範囲が必要です。現在の温度: " + temperature + "℃";
+            } else if (temperature.compareTo(new BigDecimal("0")) < 0 || temperature.compareTo(new BigDecimal("10")) > 0) {
+                return "警告: 冷蔵ゾーンの温度が許容範囲に近づいています。現在の温度: " + temperature + "℃";
             }
         } else if ("冷凍".equals(zoneTempZone)) {
-            if (temperature.compareTo(new BigDecimal("-18")) > 0) {
+            if (temperature.compareTo(new BigDecimal("-16")) > 0) {
                 return "冷凍ゾーンでの温度逸脱: -18℃以下が必要です。現在の温度: " + temperature + "℃";
+            } else if (temperature.compareTo(new BigDecimal("-18")) > 0) {
+                return "警告: 冷凍ゾーンの温度が許容範囲に近づいています。現在の温度: " + temperature + "℃";
             }
         } else if ("特冷".equals(zoneTempZone)) {
-            if (temperature.compareTo(new BigDecimal("-30")) > 0) {
+            if (temperature.compareTo(new BigDecimal("-28")) > 0) {
                 return "特冷ゾーンでの温度逸脱: -30℃以下が必要です。現在の温度: " + temperature + "℃";
+            } else if (temperature.compareTo(new BigDecimal("-30")) > 0) {
+                return "警告: 特冷ゾーンの温度が許容範囲に近づいています。現在の温度: " + temperature + "℃";
             }
         }
 
@@ -1114,21 +1124,31 @@ public class InventoryService {
         }
 
         // Validate based on temperature zone
+        // Warning threshold: within 2°C of the acceptable limit
+        // Violation threshold: exceeds the acceptable limit by more than 2°C
         if ("常温".equals(warehouseTempZone)) {
-            if (temperature.compareTo(new BigDecimal("15")) < 0 || temperature.compareTo(new BigDecimal("25")) > 0) {
+            if (temperature.compareTo(new BigDecimal("13")) < 0 || temperature.compareTo(new BigDecimal("27")) > 0) {
                 return "常温倉庫での温度逸脱: 15-25℃の範囲が必要です。現在の温度: " + temperature + "℃";
+            } else if (temperature.compareTo(new BigDecimal("15")) < 0 || temperature.compareTo(new BigDecimal("25")) > 0) {
+                return "警告: 常温倉庫の温度が許容範囲に近づいています。現在の温度: " + temperature + "℃";
             }
         } else if ("冷蔵".equals(warehouseTempZone)) {
-            if (temperature.compareTo(new BigDecimal("0")) < 0 || temperature.compareTo(new BigDecimal("10")) > 0) {
+            if (temperature.compareTo(new BigDecimal("-2")) < 0 || temperature.compareTo(new BigDecimal("12")) > 0) {
                 return "冷蔵倉庫での温度逸脱: 0-10℃の範囲が必要です。現在の温度: " + temperature + "℃";
+            } else if (temperature.compareTo(new BigDecimal("0")) < 0 || temperature.compareTo(new BigDecimal("10")) > 0) {
+                return "警告: 冷蔵倉庫の温度が許容範囲に近づいています。現在の温度: " + temperature + "℃";
             }
         } else if ("冷凍".equals(warehouseTempZone)) {
-            if (temperature.compareTo(new BigDecimal("-18")) > 0) {
+            if (temperature.compareTo(new BigDecimal("-16")) > 0) {
                 return "冷凍倉庫での温度逸脱: -18℃以下が必要です。現在の温度: " + temperature + "℃";
+            } else if (temperature.compareTo(new BigDecimal("-18")) > 0) {
+                return "警告: 冷凍倉庫の温度が許容範囲に近づいています。現在の温度: " + temperature + "℃";
             }
         } else if ("特冷".equals(warehouseTempZone)) {
-            if (temperature.compareTo(new BigDecimal("-30")) > 0) {
+            if (temperature.compareTo(new BigDecimal("-28")) > 0) {
                 return "特冷倉庫での温度逸脱: -30℃以下が必要です。現在の温度: " + temperature + "℃";
+            } else if (temperature.compareTo(new BigDecimal("-30")) > 0) {
+                return "警告: 特冷倉庫の温度が許容範囲に近づいています。現在の温度: " + temperature + "℃";
             }
         }
 

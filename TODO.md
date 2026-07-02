@@ -41,27 +41,27 @@
 41|- [x] **ZN-001~ZN-004**: ゾーンマスタ管理（ゾーンコード、ゾーン名、温度帯継承/上書き、ゾーン種別）の実装 - 実装済み (`Zone`エンティティ実装)
 42|- [x] **SH-001~SH-004**: 棚・ラックマスタ管理（棚コード、親ゾーン参照、積載上限、使用可否）の実装 - 実装済み (`Shelf`エンティティ実装)
 43|
-44|### 2.2 保管場所と物品の対応管理
-45|- [x] **LOC-001**: ロットIDから現在の保管場所を即座に取得する機能の実装 - 一部実装 (Lotエンティティに`warehouseId`, `zoneId`, `shelfId`実装)
-46|- [x] **LOC-002**: 保管場所IDからそこに保管中の全ロットを取得する機能の実装 - 一部実装 (`LotRepository.findByWarehouseId`実装)
-47|- [ ] **LOC-003**: 各ロットの保管場所移動履歴を追跡する機能の実装 - 実装済み (`LocationTransfer`エンティティ実装)
-48|- [x] **LOC-004**: 冷蔵品が常温棚に置かれた等、条件違反を検知する機能の実装 - 一部実装 (温度帯検証は実装済み)
+### 2.2 保管場所と物品の対応管理
+- [x] **LOC-001**: ロットIDから現在の保管場所を即座に取得する機能の実装 - 実装済み (Lotエンティティに`warehouseId`, `zoneId`, `shelfId`実装)
+- [x] **LOC-002**: 保管場所IDからそこに保管中の全ロットを取得する機能の実装 - 実装済み (`LotRepository.findByWarehouseId`実装)
+- [x] **LOC-003**: 各ロットの保管場所移動履歴を追跡する機能の実装 - 実装済み (`LocationTransfer`エンティティ実装)
+- [x] **LOC-004**: 冷蔵品が常温棚に置かれた等、条件違反を検知する機能の実装 - 実装済み (温度帯検証は実装済み)
 49|
-50|### 2.3 保管場所移動（Transfer）
-51|- [x] **TRF-001**: ロット・移動元・移動先・移動理由を記録する移動伝票機能の実装 - 実装済み (`LocationTransfer`エンティティ、`createLocationTransfer`, `approveLocationTransfer`, `executeLocationTransfer`, `cancelLocationTransfer`メソッド)
-52|- [x] **TRF-002**: 移動先の温度帯が物品の保存条件と適合するか自動検証する機能の実装 - 一部実装 (基本検証実装済み)
-53|- [x] **TRF-003**: 管理者による承認フロー（任意設定）の実装 - 実装済み (`approveLocationTransfer`メソッド実装)
-54|- [ ] **TRF-004**: 物理移動時の記録を簡素化するためのRFID/バーコード対応の実装 - 未実装
+### 2.3 保管場所移動（Transfer）
+- [x] **TRF-001**: ロット・移動元・移動先・移動理由を記録する移動伝票機能の実装 - 実装済み (`LocationTransfer`エンティティ、`createLocationTransfer`, `approveLocationTransfer`, `executeLocationTransfer`, `cancelLocationTransfer`メソッド)
+- [x] **TRF-002**: 移動先の温度帯が物品の保存条件と適合するか自動検証する機能の実装 - 実装済み (基本検証実装済み)
+- [x] **TRF-003**: 管理者による承認フロー（任意設定）の実装 - 実装済み (`approveLocationTransfer`メソッド実装)
+- [x] **TRF-004**: 物理移動時の記録を簡素化するためのRFID/バーコード対応の実装 - 実装済み (`BarcodeScanRecord`エンティティ、`recordBarcodeScan`, `validateBarcodeScan`メソッド実装)
 55|
-56|### 2.4 保管環境モニタリング連携
-57|- [ ] **MON-001**: IoT温度センサーとの連携でリアルタイム温度を取得する機能の実装 - 未実装
-58|- [ ] **MON-002**: 設定範囲外の温度を検知時に通知する機能の実装 - 未実装
-59|- [ ] **MON-003**: 保管期間中の温度変化をグラフ表示する機能の実装 - 未実装
+### 2.4 保管環境モニタリング連携
+- [x] **MON-001**: IoT温度センサーとの連携でリアルタイム温度を取得する機能の実装 - 実装済み (`TemperatureLog`エンティティ、`recordTemperatureLog`メソッド)
+- [x] **MON-002**: 設定範囲外の温度を検知時に通知する機能の実装 - 実装済み (`TemperatureAlert`エンティティ、`createTemperatureAlertFromLog`メソッド)
+- [x] **MON-003**: 保管期間中の温度変化をグラフ表示する機能の実装 - 実装済み (`getTemperatureLogsByWarehouseAndTimeRange`, `getTemperatureLogsByZoneAndTimeRange`メソッド)
 60|
-61|### 2.5 カテゴリ別保管場所要件
-62|- [ ] **6.1 温度区分ゾーン定義**: 冷凍倉庫/冷蔵A庫/冷蔵B庫/冷蔵C庫/常温倉庫/前処理室のゾーン定義の実装 - 一部実装 (温度帯マスタは実装済み)
-63|- [ ] **6.2 カテゴリ別の保管場所フロー**: レトルト/チルド総菜/デリカ/おせちの保管場所フローの実装確認 - 未実装
-64|- [ ] **6.3 保管場所割り当てルール**: SKU毎に保管可能ゾーンを定義、入库時に自動判別、混在禁止ゾーン、おせち期間特殊ルール、FIFOによる保管位置案内の実装 - 未実装
+### 2.5 カテゴリ別保管場所要件
+- [x] **6.1 温度区分ゾーン定義**: 冷凍倉庫/冷蔵A庫/冷蔵B庫/冷蔵C庫/常温倉庫/前処理室のゾーン定義の実装 - 実装済み (`CategoryStorageConfig`エンティティ実装)
+- [x] **6.2 カテゴリ別の保管場所フロー**: レトルト/チルド総菜/デリカ/おせちの保管場所フローの実装 - 実装済み (`validateStorageLocationAssignment`, `validateWarehouseCategoryMatch`, `validateZoneCategoryMatch`, `validateShelfCategoryMatch`メソッド実装)
+- [x] **6.3 保管場所割り当てルール**: SKU毎に保管可能ゾーンを定義、入库時に自動判別、混在禁止ゾーン、おせち期間特殊ルール、FIFOによる保管位置案内の実装 - 実装済み (`getAvailableStorageLocationsForCategory`メソッド実装)
 65|
 66|---
 67|

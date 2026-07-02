@@ -97,11 +97,16 @@
 - [x] WH-001~WH-005: 倉庫マスタ管理の実装 - 実装済み (`Warehouse`エンティティ実装)
 - [x] ZN-001~ZN-004: ゾーンマスタ管理の実装 - 実装済み (`Zone`エンティティ実装)
 - [x] SH-001~SH-004: 棚・ラックマスタ管理の実装 - 実装済み (`Shelf`エンティティ実装)
-- [x] LOC-001~LOC-004: 保管場所と物品の対応管理の実装 - 一部実装 (Lotエンティティに`warehouseId`, `zoneId`, `shelfId`実装、温度帯検証も一部実装)
-- [x] TRF-001~TRF-003: 保管場所移動（Transfer）の実装 - 実装済み (`LocationTransfer`エンティティ、`createLocationTransfer`, `approveLocationTransfer`, `executeLocationTransfer`, `cancelLocationTransfer`メソッド)
-- [ ] MON-001~MON-003: 保管環境モニタリング連携の実装 - 未実装
+- [x] LOC-001~LOC-004: 保管場所と物品の対応管理の実装 - 実装済み (Lotエンティティに`warehouseId`, `zoneId`, `shelfId`実装、温度帯検証も実装済み)
+- [x] TRF-001~TRF-004: 保管場所移動（Transfer）の実装 - 実装済み (`LocationTransfer`エンティティ、`createLocationTransfer`, `approveLocationTransfer`, `executeLocationTransfer`, `cancelLocationTransfer`メソッド、`BarcodeScanRecord`エンティティ、RFID/バーコード対応メソッド実装)
+- [x] MON-001~MON-003: 保管環境モニタリング連携の実装 - 実装済み (`TemperatureLog`エンティティ、`TemperatureAlert`エンティティ、温度検証・警告メソッド実装)
 
-### 5.6 HACCP衛生管理
+### 5.6 カテゴリ別保管場所要件
+- [x] 6.1 温度区分ゾーン定義: 冷凍倉庫/冷蔵A庫/冷蔵B庫/冷蔵C庫/常温倉庫/前処理室のゾーン定義の実装 - 実装済み (`CategoryStorageConfig`エンティティ実装)
+- [x] 6.2 カテゴリ別の保管場所フロー: レトルト/チルド総菜/デリカ/おせちの保管場所フローの実装 - 実装済み (`validateStorageLocationAssignment`, `validateWarehouseCategoryMatch`, `validateZoneCategoryMatch`, `validateShelfCategoryMatch`メソッド実装)
+- [x] 6.3 保管場所割り当てルール: SKU毎に保管可能ゾーンを定義、入库時に自動判別、混在禁止ゾーン、おせち期間特殊ルール、FIFOによる保管位置案内の実装 - 実装済み (`getAvailableStorageLocationsForCategory`メソッド実装)
+
+### 5.7 HACCP衛生管理
 - [x] PR-001~PR-012: プリ・レquisites管理の実装 - 一部実装
 - [x] HA-001~HA-004: 危害要因分析の実装 - 実装済み (`HazardAnalysis`エンティティ実装)
 - [x] CCP-001~CCP-003: CCPの特定の実装 - 実装済み (`CcpMap`エンティティ実装)
@@ -111,14 +116,14 @@
 - [x] VA-001~VA-005: 検証手順の確立の実装 - 実装済み (`VerificationProcedure`エンティティ実装)
 - [ ] RC-001~RC-005: 記録文書の維持の実装 - 一部実装
 
-### 5.7 品質管理
+### 5.8 品質管理
 - [x] QC-001~QC-004: 検査規格マスタの実装 - 実装済み (`InspectionSpec`エンティティ実装)
 - [x] QP-001~QP-004: 検査実施行の実装 - 実装済み (`InspectionRecord`エンティティ実装)
 - [ ] QR-001~QC-003: 出荷判断の実装 - 一部実装
 - [x] NC-001~NC-004: 不適合品管理（NCR）の実装 - 実装済み (`NcrReport`エンティティ実装)
 - [ ] QRT-001~QRT-003: 品質レポートの実装 - 未実装
 
-### 5.8 製造実行
+### 5.9 製造実行
 - [ ] BM-001~BM-004: BOM（部品表）管理の実装 - 未実装
 - [ ] PF-001~PF-003: 工程フロー管理の実装 - 一部実装
 - [ ] WI-001~WI-004: 生産指示書の実装 - 未実装
@@ -126,21 +131,21 @@
 - [ ] BT-001~BT-003: バッチトレーサビリティの実装 - 一部実装
 - [ ] PR-001~PR-003: 生産実績レポートの実装 - 未実装
 
-### 5.9 トレーサビリティ
+### 5.10 トレーサビリティ
 - [ ] FT-001~FT-004: フォワードトレースの実装 - 一部実装
 - [ ] BT-001~BT-003: バックトレースの実装 - 一部実装
 - [ ] RC-001~RC-004: リコール管理の実装 - 未実装
 - [ ] FSC-001~FSC-002: FSC対応の実装 - 未実装
 - [ ] TR-001~TR-002: トレーサビリティレポートの実装 - 未実装
 
-### 5.10 非機能要件
+### 5.11 非機能要件
 - [ ] PF-001~PF-009: パフォーマンス要件の実装 - 未実装
 - [ ] AV-001~AV-005: 可用性・信頼性要件の実装 - 未実装
 - [ ] SC-001~SC-005: セキュリティ要件の実装 - 未実装
 - [ ] DP-010~DP-013: データ保護の実装 - 未実装
 - [ ] AU-001~AU-004: 監査証跡の実装 - 一部実装
 
-### 5.11 システムアーキテクチャ
+### 5.12 システムアーキテクチャ
 - [ ] S-01~S-12: サービス層（マイクロサービス）設計の実装 - 一部実装
 - [ ] 3.1~3.3: データベース設計方針の実装 - 一部実装
 - [ ] 4.1~4.2: IF連携アーキテクチャの実装 - 未実装

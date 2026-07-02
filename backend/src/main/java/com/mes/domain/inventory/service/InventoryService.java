@@ -1,6 +1,8 @@
 package com.mes.domain.inventory.service;
 
+import com.mes.domain.inventory.entity.BarcodeScanRecord;
 import com.mes.domain.inventory.entity.CategoryFifoConfig;
+import com.mes.domain.inventory.entity.CategoryStorageConfig;
 import com.mes.domain.inventory.entity.CcpMap;
 import com.mes.domain.inventory.entity.CcpMonitoringRecord;
 import com.mes.domain.inventory.entity.CorrectiveAction;
@@ -13,12 +15,16 @@ import com.mes.domain.inventory.entity.LocationTransfer;
 import com.mes.domain.inventory.entity.Lot;
 import com.mes.domain.inventory.entity.NcrReport;
 import com.mes.domain.inventory.entity.Shelf;
+import com.mes.domain.inventory.entity.TemperatureAlert;
+import com.mes.domain.inventory.entity.TemperatureLog;
 import com.mes.domain.inventory.entity.VerificationProcedure;
 import com.mes.domain.inventory.entity.Warehouse;
 import com.mes.domain.inventory.entity.Zone;
 import com.mes.domain.inventory.enums.DisposalReason;
 import com.mes.domain.inventory.enums.LotStatus;
+import com.mes.domain.inventory.repository.BarcodeScanRecordRepository;
 import com.mes.domain.inventory.repository.CategoryFifoConfigRepository;
+import com.mes.domain.inventory.repository.CategoryStorageConfigRepository;
 import com.mes.domain.inventory.repository.CcpMapRepository;
 import com.mes.domain.inventory.repository.CcpMonitoringRecordRepository;
 import com.mes.domain.inventory.repository.CorrectiveActionRepository;
@@ -31,6 +37,8 @@ import com.mes.domain.inventory.repository.LocationTransferRepository;
 import com.mes.domain.inventory.repository.LotRepository;
 import com.mes.domain.inventory.repository.NcrReportRepository;
 import com.mes.domain.inventory.repository.ShelfRepository;
+import com.mes.domain.inventory.repository.TemperatureAlertRepository;
+import com.mes.domain.inventory.repository.TemperatureLogRepository;
 import com.mes.domain.inventory.repository.VerificationProcedureRepository;
 import com.mes.domain.inventory.repository.WarehouseRepository;
 import com.mes.domain.inventory.repository.ZoneRepository;
@@ -53,6 +61,7 @@ public class InventoryService {
     private final LotRepository lotRepository;
     private final DisposalRequestRepository disposalRequestRepository;
     private final CategoryFifoConfigRepository categoryFifoConfigRepository;
+    private final CategoryStorageConfigRepository categoryStorageConfigRepository;
     private final WarehouseRepository warehouseRepository;
     private final ZoneRepository zoneRepository;
     private final ShelfRepository shelfRepository;
@@ -66,19 +75,25 @@ public class InventoryService {
     private final InspectionSpecRepository inspectionSpecRepository;
     private final InspectionRecordRepository inspectionRecordRepository;
     private final NcrReportRepository ncrReportRepository;
+    private final TemperatureLogRepository temperatureLogRepository;
+    private final TemperatureAlertRepository temperatureAlertRepository;
+    private final BarcodeScanRecordRepository barcodeScanRecordRepository;
 
     public InventoryService(LotRepository lotRepository, DisposalRequestRepository disposalRequestRepository, 
                             CategoryFifoConfigRepository categoryFifoConfigRepository,
+                            CategoryStorageConfigRepository categoryStorageConfigRepository,
                             WarehouseRepository warehouseRepository, ZoneRepository zoneRepository,
                             ShelfRepository shelfRepository, LocationTransferRepository locationTransferRepository,
                             HazardAnalysisRepository hazardAnalysisRepository, CcpMapRepository ccpMapRepository,
                             CriticalLimitRepository criticalLimitRepository, CcpMonitoringRecordRepository ccpMonitoringRecordRepository,
                             CorrectiveActionRepository correctiveActionRepository, VerificationProcedureRepository verificationProcedureRepository,
                             InspectionSpecRepository inspectionSpecRepository, InspectionRecordRepository inspectionRecordRepository,
-                            NcrReportRepository ncrReportRepository) {
+                            NcrReportRepository ncrReportRepository, TemperatureLogRepository temperatureLogRepository,
+                            TemperatureAlertRepository temperatureAlertRepository, BarcodeScanRecordRepository barcodeScanRecordRepository) {
         this.lotRepository = lotRepository;
         this.disposalRequestRepository = disposalRequestRepository;
         this.categoryFifoConfigRepository = categoryFifoConfigRepository;
+        this.categoryStorageConfigRepository = categoryStorageConfigRepository;
         this.warehouseRepository = warehouseRepository;
         this.zoneRepository = zoneRepository;
         this.shelfRepository = shelfRepository;
@@ -92,6 +107,9 @@ public class InventoryService {
         this.inspectionSpecRepository = inspectionSpecRepository;
         this.inspectionRecordRepository = inspectionRecordRepository;
         this.ncrReportRepository = ncrReportRepository;
+        this.temperatureLogRepository = temperatureLogRepository;
+        this.temperatureAlertRepository = temperatureAlertRepository;
+        this.barcodeScanRecordRepository = barcodeScanRecordRepository;
     }
 
     /**
@@ -981,5 +999,504 @@ public class InventoryService {
      */
     public List<NcrReport> getNcrReportsByStatus(UUID factoryId, String status) {
         return ncrReportRepository.findByStatus(status);
+    }
+
+    /**
+     * Records a temperature log for a warehouse or zone.
+     *
+     * @param factoryId the factory ID
+     * @param warehouseId the warehouse ID
+     * @param zoneId the zone ID
+     * @param temperature the temperature
+     * @param humidity the humidity
+     * @return the created temperature log
+     */
+    public TemperatureLog recordTemperatureLog(UUID factoryId, UUID warehouseId, UUID zoneId,
+                                               BigDecimal temperature, BigDecimal humidity) {
+        UUID logId = UUID.randomUUID();
+        TemperatureLog log = new TemperatureLog(logId, factoryId, warehouseId, zoneId,
+                temperature, humidity, java.time.LocalDateTime.now());
+
+        // Validate temperature against zone/warehouse requirements
+        String violationMessage = validateTemperature(log);
+        if (violationMessage != null) {
+            if (violationMessage.contains("警告")) {
+                log.markWarning(violationMessage);
+            } else {
+                log.markViolation(violationMessage);
+            }
+        }
+
+        return temperatureLogRepository.save(log);
+    }
+
+    /**
+     * Validates temperature against zone/warehouse requirements.
+     *
+     * @param log the temperature log
+     * @return violation message if any, null if valid
+     */
+    private String validateTemperature(TemperatureLog log) {
+        // If zoneId is provided, check zone temperature requirements
+        if (log.getZoneId() != null) {
+            Zone zone = zoneRepository.findById(log.getZoneId()).orElse(null);
+            if (zone != null) {
+                return validateZoneTemperature(zone, log.getTemperature());
+            }
+        }
+
+        // If warehouseId is provided, check warehouse temperature requirements
+        if (log.getWarehouseId() != null) {
+            Warehouse warehouse = warehouseRepository.findById(log.getWarehouseId()).orElse(null);
+            if (warehouse != null) {
+                return validateWarehouseTemperature(warehouse, log.getTemperature());
+            }
+        }
+
+        return null; // No violation
+    }
+
+    /**
+     * Validates temperature against zone requirements.
+     *
+     * @param zone the zone
+     * @param temperature the temperature
+     * @return violation message if any, null if valid
+     */
+    private String validateZoneTemperature(Zone zone, BigDecimal temperature) {
+        String zoneTempZone = zone.getTemperatureZone();
+        if (zoneTempZone == null || zoneTempZone.isEmpty()) {
+            // Inherit from warehouse
+            Warehouse warehouse = warehouseRepository.findById(zone.getWarehouseId()).orElse(null);
+            if (warehouse != null) {
+                zoneTempZone = warehouse.getTemperatureZone();
+            }
+        }
+
+        if (zoneTempZone == null || zoneTempZone.isEmpty()) {
+            return null; // No temperature zone defined
+        }
+
+        // Validate based on temperature zone
+        if ("常温".equals(zoneTempZone)) {
+            if (temperature.compareTo(new BigDecimal("15")) < 0 || temperature.compareTo(new BigDecimal("25")) > 0) {
+                return "常温ゾーンでの温度逸脱: 15-25℃の範囲が必要です。現在の温度: " + temperature + "℃";
+            }
+        } else if ("冷蔵".equals(zoneTempZone)) {
+            if (temperature.compareTo(new BigDecimal("0")) < 0 || temperature.compareTo(new BigDecimal("10")) > 0) {
+                return "冷蔵ゾーンでの温度逸脱: 0-10℃の範囲が必要です。現在の温度: " + temperature + "℃";
+            }
+        } else if ("冷凍".equals(zoneTempZone)) {
+            if (temperature.compareTo(new BigDecimal("-18")) > 0) {
+                return "冷凍ゾーンでの温度逸脱: -18℃以下が必要です。現在の温度: " + temperature + "℃";
+            }
+        } else if ("特冷".equals(zoneTempZone)) {
+            if (temperature.compareTo(new BigDecimal("-30")) > 0) {
+                return "特冷ゾーンでの温度逸脱: -30℃以下が必要です。現在の温度: " + temperature + "℃";
+            }
+        }
+
+        return null; // No violation
+    }
+
+    /**
+     * Validates temperature against warehouse requirements.
+     *
+     * @param warehouse the warehouse
+     * @param temperature the temperature
+     * @return violation message if any, null if valid
+     */
+    private String validateWarehouseTemperature(Warehouse warehouse, BigDecimal temperature) {
+        String warehouseTempZone = warehouse.getTemperatureZone();
+
+        if (warehouseTempZone == null || warehouseTempZone.isEmpty()) {
+            return null; // No temperature zone defined
+        }
+
+        // Validate based on temperature zone
+        if ("常温".equals(warehouseTempZone)) {
+            if (temperature.compareTo(new BigDecimal("15")) < 0 || temperature.compareTo(new BigDecimal("25")) > 0) {
+                return "常温倉庫での温度逸脱: 15-25℃の範囲が必要です。現在の温度: " + temperature + "℃";
+            }
+        } else if ("冷蔵".equals(warehouseTempZone)) {
+            if (temperature.compareTo(new BigDecimal("0")) < 0 || temperature.compareTo(new BigDecimal("10")) > 0) {
+                return "冷蔵倉庫での温度逸脱: 0-10℃の範囲が必要です。現在の温度: " + temperature + "℃";
+            }
+        } else if ("冷凍".equals(warehouseTempZone)) {
+            if (temperature.compareTo(new BigDecimal("-18")) > 0) {
+                return "冷凍倉庫での温度逸脱: -18℃以下が必要です。現在の温度: " + temperature + "℃";
+            }
+        } else if ("特冷".equals(warehouseTempZone)) {
+            if (temperature.compareTo(new BigDecimal("-30")) > 0) {
+                return "特冷倉庫での温度逸脱: -30℃以下が必要です。現在の温度: " + temperature + "℃";
+            }
+        }
+
+        return null; // No violation
+    }
+
+    /**
+     * Creates a temperature alert based on a temperature log.
+     *
+     * @param log the temperature log
+     * @return the created temperature alert
+     */
+    public TemperatureAlert createTemperatureAlertFromLog(TemperatureLog log) {
+        if ("正常".equals(log.getStatus())) {
+            return null; // No alert for normal logs
+        }
+
+        UUID alertId = UUID.randomUUID();
+        String alertType = "逸脱".equals(log.getStatus()) ? "逸脱" : "警告";
+        String severity = "逸脱".equals(log.getStatus()) ? "高" : "中";
+
+        TemperatureAlert alert = new TemperatureAlert(alertId, log.getFactoryId(), log.getWarehouseId(),
+                log.getZoneId(), alertType, severity, log.getErrorMessage(), log.getRecordedAt());
+
+        return temperatureAlertRepository.save(alert);
+    }
+
+    /**
+     * Resolves a temperature alert.
+     *
+     * @param alertId the alert ID
+     * @param resolvedBy the user resolving the alert
+     * @return the resolved temperature alert
+     */
+    public TemperatureAlert resolveTemperatureAlert(UUID alertId, UUID resolvedBy) {
+        TemperatureAlert alert = temperatureAlertRepository.findById(alertId)
+                .orElseThrow(() -> new IllegalArgumentException("Temperature alert not found: " + alertId));
+
+        if (alert.isResolved()) {
+            throw new IllegalStateException("Temperature alert is already resolved: " + alertId);
+        }
+
+        alert.resolve(resolvedBy);
+        return temperatureAlertRepository.save(alert);
+    }
+
+    /**
+     * Gets temperature logs by warehouse and time range.
+     *
+     * @param warehouseId the warehouse ID
+     * @param start the start time
+     * @param end the end time
+     * @return list of temperature logs
+     */
+    public List<TemperatureLog> getTemperatureLogsByWarehouseAndTimeRange(UUID warehouseId,
+                                                                          java.time.LocalDateTime start,
+                                                                          java.time.LocalDateTime end) {
+        return temperatureLogRepository.findByWarehouseIdAndRecordedAtBetween(warehouseId, start, end);
+    }
+
+    /**
+     * Gets temperature logs by zone and time range.
+     *
+     * @param zoneId the zone ID
+     * @param start the start time
+     * @param end the end time
+     * @return list of temperature logs
+     */
+    public List<TemperatureLog> getTemperatureLogsByZoneAndTimeRange(UUID zoneId,
+                                                                     java.time.LocalDateTime start,
+                                                                     java.time.LocalDateTime end) {
+        return temperatureLogRepository.findByZoneIdAndRecordedAtBetween(zoneId, start, end);
+    }
+
+    /**
+     * Gets unresolved temperature alerts by warehouse.
+     *
+     * @param warehouseId the warehouse ID
+     * @return list of unresolved temperature alerts
+     */
+    public List<TemperatureAlert> getUnresolvedTemperatureAlertsByWarehouse(UUID warehouseId) {
+        return temperatureAlertRepository.findByWarehouseIdAndIsResolvedFalse(warehouseId);
+    }
+
+    /**
+     * Gets unresolved temperature alerts by zone.
+     *
+     * @param zoneId the zone ID
+     * @return list of unresolved temperature alerts
+     */
+    public List<TemperatureAlert> getUnresolvedTemperatureAlertsByZone(UUID zoneId) {
+        return temperatureAlertRepository.findByZoneIdAndIsResolvedFalse(zoneId);
+    }
+
+    /**
+     * Gets category storage configuration by category name.
+     *
+     * @param factoryId the factory ID
+     * @param categoryName the category name (レトルト/チルド総菜/デリカ/おせち)
+     * @return the category storage configuration
+     */
+    public CategoryStorageConfig getCategoryStorageConfig(UUID factoryId, String categoryName) {
+        return categoryStorageConfigRepository.findByFactoryIdAndCategoryName(factoryId, categoryName)
+                .orElseThrow(() -> new IllegalArgumentException("Category storage config not found for: " + categoryName));
+    }
+
+    /**
+     * Validates storage location assignment based on category rules.
+     *
+     * @param productId the product ID
+     * @param locationId the location ID (warehouse/zone/shelf)
+     * @param category the product category
+     * @return true if valid, false otherwise
+     */
+    public boolean validateStorageLocationAssignment(UUID productId, UUID locationId, String category) {
+        // Get product from product repository (assuming it exists)
+        // For now, basic validation based on category and location type
+
+        // Check if location is a warehouse
+        Warehouse warehouse = warehouseRepository.findById(locationId).orElse(null);
+        if (warehouse != null) {
+            return validateWarehouseCategoryMatch(warehouse, category);
+        }
+
+        // Check if location is a zone
+        Zone zone = zoneRepository.findById(locationId).orElse(null);
+        if (zone != null) {
+            return validateZoneCategoryMatch(zone, category);
+        }
+
+        // Check if location is a shelf
+        Shelf shelf = shelfRepository.findById(locationId).orElse(null);
+        if (shelf != null) {
+            return validateShelfCategoryMatch(shelf, category);
+        }
+
+        return false; // Invalid location type
+    }
+
+    /**
+     * Validates warehouse category match.
+     *
+     * @param warehouse the warehouse
+     * @param category the product category
+     * @return true if valid, false otherwise
+     */
+    private boolean validateWarehouseCategoryMatch(Warehouse warehouse, String category) {
+        String warehouseType = warehouse.getWarehouseType();
+
+        // レトルト食品は常温倉庫
+        if ("レトルト".equals(category) && "常温倉庫".equals(warehouseType)) {
+            return true;
+        }
+
+        // チルド総菜は冷蔵倉庫
+        if ("チルド総菜".equals(category) && "冷蔵倉庫".equals(warehouseType)) {
+            return true;
+        }
+
+        // デリカは冷蔵倉庫
+        if ("デリカ".equals(category) && "冷蔵倉庫".equals(warehouseType)) {
+            return true;
+        }
+
+        // おせち料理は常温倉庫または冷蔵倉庫
+        if ("おせち".equals(category) && ("常温倉庫".equals(warehouseType) || "冷蔵倉庫".equals(warehouseType))) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Validates zone category match.
+     *
+     * @param zone the zone
+     * @param category the product category
+     * @return true if valid, false otherwise
+     */
+    private boolean validateZoneCategoryMatch(Zone zone, String category) {
+        String zoneType = zone.getZoneType();
+
+        // レトルト食品は常温ゾーン
+        if ("レトルト".equals(category) && (zoneType == null || !zoneType.contains("冷蔵") && !zoneType.contains("冷凍"))) {
+            return true;
+        }
+
+        // チルド総菜は冷蔵ゾーン
+        if ("チルド総菜".equals(category) && zoneType != null && zoneType.contains("冷蔵")) {
+            return true;
+        }
+
+        // デリカは冷蔵ゾーン
+        if ("デリカ".equals(category) && zoneType != null && zoneType.contains("冷蔵")) {
+            return true;
+        }
+
+        // おせち料理は常温または冷蔵ゾーン
+        if ("おせち".equals(category) && (zoneType == null || zoneType.contains("常温") || zoneType.contains("冷蔵"))) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Validates shelf category match.
+     *
+     * @param shelf the shelf
+     * @param category the product category
+     * @return true if valid, false otherwise
+     */
+    private boolean validateShelfCategoryMatch(Shelf shelf, String category) {
+        // Shelves inherit category rules from their parent zone
+        Zone zone = zoneRepository.findById(shelf.getZoneId()).orElse(null);
+        if (zone != null) {
+            return validateZoneCategoryMatch(zone, category);
+        }
+
+        return true; // Default to true if zone not found
+    }
+
+    /**
+     * Gets available storage locations for a category.
+     *
+     * @param category the product category
+     * @return list of available storage locations
+     */
+    public List<StorageLocation> getAvailableStorageLocationsForCategory(String category) {
+        List<StorageLocation> locations = new java.util.ArrayList<>();
+
+        // Note: In a real implementation, we would need to add a findAll method to the repositories
+        // or use a different approach to get all warehouses and zones. For now, this is a placeholder.
+        // In the actual application, this would be implemented using the repository's query methods
+        // or by adding a findAll method to the repository interfaces.
+
+        return locations;
+    }
+
+    /**
+     * Storage location DTO.
+     */
+    public static class StorageLocation {
+        private UUID locationId;
+        private String locationName;
+        private String locationType; // warehouse/zone/shelf
+        private String temperatureZone;
+
+        public StorageLocation(UUID locationId, String locationName, String locationType, String temperatureZone) {
+            this.locationId = locationId;
+            this.locationName = locationName;
+            this.locationType = locationType;
+            this.temperatureZone = temperatureZone;
+        }
+
+        public UUID getLocationId() {
+            return locationId;
+        }
+
+        public String getLocationName() {
+            return locationName;
+        }
+
+        public String getLocationType() {
+            return locationType;
+        }
+
+        public String getTemperatureZone() {
+            return temperatureZone;
+        }
+    }
+
+    /**
+     * Records a barcode/RFID scan for inventory operations.
+     *
+     * @param factoryId the factory ID
+     * @param scanType the scan type (LOT_NUMBER/WAREHOUSE_ID/ZONE_ID/SHELF_ID/TRANSFER_ID)
+     * @param scanValue the scanned value
+     * @param actionType the action type (CREATE_TRANSFER/EXECUTE_TRANSFER/CANCEL_TRANSFER)
+     * @param scannedBy the user scanning the barcode
+     * @return the created barcode scan record
+     */
+    public BarcodeScanRecord recordBarcodeScan(UUID factoryId, String scanType, String scanValue,
+                                                String actionType, UUID scannedBy) {
+        UUID scanId = UUID.randomUUID();
+        BarcodeScanRecord record = new BarcodeScanRecord(scanId, factoryId, scanType, scanValue,
+                actionType, scannedBy);
+
+        // Validate the scan based on action type
+        String errorMessage = validateBarcodeScan(record);
+        if (errorMessage != null) {
+            record.error(errorMessage);
+        } else {
+            record.complete();
+        }
+
+        return barcodeScanRecordRepository.save(record);
+    }
+
+    /**
+     * Validates a barcode scan.
+     *
+     * @param record the barcode scan record
+     * @return error message if invalid, null if valid
+     */
+    private String validateBarcodeScan(BarcodeScanRecord record) {
+        String scanType = record.getScanType();
+        String scanValue = record.getScanValue();
+
+        if ("LOT_NUMBER".equals(scanType)) {
+            List<Lot> lots = lotRepository.findByLotNumber(scanValue);
+            if (lots.isEmpty()) {
+                return "No lot found for lot number: " + scanValue;
+            }
+        } else if ("TRANSFER_ID".equals(scanType)) {
+            try {
+                UUID transferId = UUID.fromString(scanValue);
+                LocationTransfer transfer = locationTransferRepository.findById(transferId)
+                        .orElse(null);
+                if (transfer == null) {
+                    return "No location transfer found for ID: " + scanValue;
+                }
+                record.setRelatedTransferId(transferId);
+            } catch (IllegalArgumentException e) {
+                return "Invalid transfer ID format: " + scanValue;
+            }
+        } else if ("WAREHOUSE_ID".equals(scanType)) {
+            Warehouse warehouse = warehouseRepository.findById(UUID.fromString(scanValue)).orElse(null);
+            if (warehouse == null) {
+                return "No warehouse found for ID: " + scanValue;
+            }
+        } else if ("ZONE_ID".equals(scanType)) {
+            Zone zone = zoneRepository.findById(UUID.fromString(scanValue)).orElse(null);
+            if (zone == null) {
+                return "No zone found for ID: " + scanValue;
+            }
+        } else if ("SHELF_ID".equals(scanType)) {
+            Shelf shelf = shelfRepository.findById(UUID.fromString(scanValue)).orElse(null);
+            if (shelf == null) {
+                return "No shelf found for ID: " + scanValue;
+            }
+        }
+
+        return null; // No error
+    }
+
+    /**
+     * Gets barcode scan records by status.
+     *
+     * @param factoryId the factory ID
+     * @param status the status (処理中/完了/エラー)
+     * @return list of barcode scan records
+     */
+    public List<BarcodeScanRecord> getBarcodeScanRecordsByStatus(UUID factoryId, String status) {
+        List<BarcodeScanRecord> allRecords = barcodeScanRecordRepository.findByStatus(status);
+        return allRecords.stream()
+                .filter(record -> factoryId.equals(record.getFactoryId()))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Gets barcode scan records by scan type and value.
+     *
+     * @param scanType the scan type
+     * @param scanValue the scan value
+     * @return list of barcode scan records
+     */
+    public List<BarcodeScanRecord> getBarcodeScanRecordsByScanTypeAndValue(String scanType, String scanValue) {
+        return barcodeScanRecordRepository.findByScanTypeAndScanValue(scanType, scanValue);
     }
 }

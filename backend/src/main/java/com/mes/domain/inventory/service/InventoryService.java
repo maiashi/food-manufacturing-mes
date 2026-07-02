@@ -1141,9 +1141,9 @@ public class InventoryService {
      * @param log the temperature log
      * @return the created temperature alert
      */
-    public TemperatureAlert createTemperatureAlertFromLog(TemperatureLog log) {
+    public Optional<TemperatureAlert> createTemperatureAlertFromLog(TemperatureLog log) {
         if ("正常".equals(log.getStatus())) {
-            return null; // No alert for normal logs
+            return Optional.empty();
         }
 
         UUID alertId = UUID.randomUUID();
@@ -1153,7 +1153,7 @@ public class InventoryService {
         TemperatureAlert alert = new TemperatureAlert(alertId, log.getFactoryId(), log.getWarehouseId(),
                 log.getZoneId(), alertType, severity, log.getErrorMessage(), log.getRecordedAt());
 
-        return temperatureAlertRepository.save(alert);
+        return Optional.of(temperatureAlertRepository.save(alert));
     }
 
     /**

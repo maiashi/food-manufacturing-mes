@@ -1456,20 +1456,37 @@ public class InventoryService {
                 return "Invalid transfer ID format: " + scanValue;
             }
         } else if ("WAREHOUSE_ID".equals(scanType)) {
-            Warehouse warehouse = warehouseRepository.findById(UUID.fromString(scanValue)).orElse(null);
-            if (warehouse == null) {
-                return "No warehouse found for ID: " + scanValue;
+            try {
+                UUID warehouseId = UUID.fromString(scanValue);
+                Warehouse warehouse = warehouseRepository.findById(warehouseId).orElse(null);
+                if (warehouse == null) {
+                    return "No warehouse found for ID: " + scanValue;
+                }
+            } catch (IllegalArgumentException e) {
+                return "Invalid warehouse ID format: " + scanValue;
             }
         } else if ("ZONE_ID".equals(scanType)) {
-            Zone zone = zoneRepository.findById(UUID.fromString(scanValue)).orElse(null);
-            if (zone == null) {
-                return "No zone found for ID: " + scanValue;
+            try {
+                UUID zoneId = UUID.fromString(scanValue);
+                Zone zone = zoneRepository.findById(zoneId).orElse(null);
+                if (zone == null) {
+                    return "No zone found for ID: " + scanValue;
+                }
+            } catch (IllegalArgumentException e) {
+                return "Invalid zone ID format: " + scanValue;
             }
         } else if ("SHELF_ID".equals(scanType)) {
-            Shelf shelf = shelfRepository.findById(UUID.fromString(scanValue)).orElse(null);
-            if (shelf == null) {
-                return "No shelf found for ID: " + scanValue;
+            try {
+                UUID shelfId = UUID.fromString(scanValue);
+                Shelf shelf = shelfRepository.findById(shelfId).orElse(null);
+                if (shelf == null) {
+                    return "No shelf found for ID: " + scanValue;
+                }
+            } catch (IllegalArgumentException e) {
+                return "Invalid shelf ID format: " + scanValue;
             }
+        } else {
+            return "Unsupported scan type: " + scanType;
         }
 
         return null; // No error

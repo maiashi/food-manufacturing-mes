@@ -61,7 +61,7 @@
 ### 2.5 カテゴリ別保管場所要件
 - [x] **6.1 温度区分ゾーン定義**: 冷凍倉庫/冷蔵A庫/冷蔵B庫/冷蔵C庫/常温倉庫/前処理室のゾーン定義の実装 - 実装済み (`CategoryStorageConfig`エンティティ実装)
 - [x] **6.2 カテゴリ別の保管場所フロー**: レトルト/チルド総菜/デリカ/おせちの保管場所フローの実装 - 実装済み (`validateStorageLocationAssignment`, `validateWarehouseCategoryMatch`, `validateZoneCategoryMatch`, `validateShelfCategoryMatch`メソッド実装)
-- [x] **6.3 保管場所割り当てルール**: SKU毎に保管可能ゾーンを定義、入库時に自動判別、混在禁止ゾーン、おせち期間特殊ルール、FIFOによる保管位置案内の実装 - 実装済み (`getAvailableStorageLocationsForCategory`メソッド実装)
+- [ ] **6.3 保管場所割り当てルール**: SKU毎に保管可能ゾーンを定義、入库時に自動判別、混在禁止ゾーン、おせち期間特殊ルール、FIFOによる保管位置案内の実装 - 未実装 (`getAvailableStorageLocationsForCategory` はプレースホルダー)
 65|
 66|---
 67|
